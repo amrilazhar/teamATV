@@ -29,28 +29,6 @@ class AuthController {
     }
   }
 
-  async setAdmin(req, res) {
-    try {
-      let options = {};
-      options.overwrite = false;
-      options.new = true;
-      let data = await user.findOneAndUpdate(
-        { _id: req.params.id },
-        {
-          role: "admin",
-        }, options,
-      );
-      if (!data) {
-        return res.status(400).json({ message: "someting went wrong" });
-      } else {
-        return res.status(200).json({ message: "Oke" });
-      }
-    } catch (e) {
-      console.log(e);
-      return res.status(500).json({ message: "someting went wrong" });
-    }
-  }
-
 }
 
 module.exports = new AuthController();

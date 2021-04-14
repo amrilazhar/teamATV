@@ -33,6 +33,14 @@ app.use(express.static("public"));
 const authRoutes = require("./routes/authRoute.js");
 app.use("/auth", authRoutes);
 
+const movieRoutes = require("./routes/movieRoute.js");
+app.use("/movie", movieRoutes);
+
+const reviewRoutes = require("./routes/reviewRoute.js");
+app.use("/review", reviewRoutes);
+
+const userRoutes = require("./routes/userRoute.js");
+app.use("/user", userRoutes);
 
 //======================== security code ==============================//
 // Sanitize data
