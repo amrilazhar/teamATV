@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { user, review, movie } = require("../models");
+const { user, review, movie, person } = require("../models");
 
 class UserController {
 

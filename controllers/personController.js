@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { user, review, movie, person } = require("../models");
 
-class MovieController {
+class PersonController {
 
 }
 
-module.exports = new MovieController();
+module.exports = new PersonController();

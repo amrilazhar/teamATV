@@ -8,7 +8,7 @@ const MovieSchema = new mongoose.Schema(
       required: true,
     },
     director : {
-      type: String,
+      type: mongoose.Schema.ObjectId,
       required: false,
     },
     budget: {
@@ -16,7 +16,7 @@ const MovieSchema = new mongoose.Schema(
       required: false,
     },
     release_date: {
-      type: String,
+      type: Date,
       required: false,
     },
     synopsis: {
@@ -50,6 +50,7 @@ const MovieSchema = new mongoose.Schema(
     poster: {
       type: String,
       required: false,
+      default:"images/defaultPoster.jpg",
     },
     count_review: {
       type: Number,

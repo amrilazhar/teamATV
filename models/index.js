@@ -16,5 +16,6 @@ mongoose
 const user = require("./users.js");
 const movie = require("./movies.js");
 const review = require("./reviews.js");
+const person = require("./persons.js");
 
-module.exports = { user, movie, review };
+module.exports = { user, movie, review, person };
