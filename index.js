@@ -43,7 +43,7 @@ const userRoutes = require("./routes/userRoute.js");
 app.use("/user", userRoutes);
 
 const personRoutes = require("./routes/personRoute.js");
-app.use("/user", personRoutes);
+app.use("/person", personRoutes);
 
 //======================== security code ==============================//
 // Sanitize data

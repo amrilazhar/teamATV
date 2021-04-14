@@ -113,7 +113,7 @@ passport.use(
         email: token.user.email,
       });
 
-      if (userSignin.role.includes("user")) {
+      if (userSignin.role.includes("user") || userSignin.role.includes("admin")) {
         return done(null, token.user);
       }
 
