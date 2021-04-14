@@ -27,10 +27,14 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
-    picture: {
+    profile_picture: {
       type: String,
       required: false,
       get : getImage,
+    },
+    reviewed_movie: {
+      type: Array,
+      required: false,
     },
   },
   {
@@ -46,7 +50,7 @@ function getImage(image) {
 }
 
 function encryptPwd(password) {
-  return bcrypt.hashSync(password, 13);
+  return bcrypt.hashSync(password, 10);
 }
 UserSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 

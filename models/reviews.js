@@ -3,7 +3,7 @@ const mongoose_delete = require("mongoose-delete");
 
 const ReviewSchema = new mongoose.Schema(
   {
-    user_id: {
+    user_id : {
       type: mongoose.Schema.ObjectId,
       required: true,
     },
@@ -17,7 +17,7 @@ const ReviewSchema = new mongoose.Schema(
     },
     review: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {

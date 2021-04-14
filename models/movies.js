@@ -24,23 +24,19 @@ const MovieSchema = new mongoose.Schema(
       required: false,
     },
     genre: {
-      type: String,
+      type: Array,
       required: false,
     },
     tags: {
-      type: String,
+      type: Array,
       required: false,
     },
     trailer: {
       type: String,
       required: false,
     },
-    author: {
-      type: String,
-      required: false,
-    },
-    status: {
-      type: Number,
+    isReleased: {
+      type: Boolean,
       required: false,
     },
     rated: {
@@ -64,6 +60,18 @@ const MovieSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
+    isFeatured: {
+      type: Boolean,
+      required: false,
+    },
+    updatedBy : {
+      type :  mongoose.Schema.ObjectId,
+      required : false,
+    },
+    user_reviewed : {
+      type : Array,
+      required : false,
+    }
   },
   {
     timestamps: {

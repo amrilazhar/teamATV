@@ -11,12 +11,8 @@ const PersonSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
-    description: {
+    bio: {
       type: String,
-      required: false,
-    },
-    birthday: {
-      type: Date,
       required: false,
     },
     picture: {

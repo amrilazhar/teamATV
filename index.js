@@ -29,7 +29,7 @@ app.use(fileUpload());
 //set static assets to public directory
 app.use(express.static("public"));
 
-// ROUTES DECLARATION & Import
+// ROUTES DECLARATION & IMPORT
 const authRoutes = require("./routes/authRoute.js");
 app.use("/auth", authRoutes);
 
