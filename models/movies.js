@@ -9,7 +9,7 @@ const MovieSchema = new mongoose.Schema(
       required: true,
     },
     director : {
-      type: mongoose.Schema.ObjectId,
+      type: String,
       required: false,
     },
     budget: {
