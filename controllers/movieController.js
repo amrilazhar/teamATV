@@ -2,6 +2,41 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie, person } = require("../models");
 
 class MovieController {
+
+  async detail(req, res) {
+    try {
+
+      let detailMovie = await movie.find({ deleted: false, _id : req.params.id_movie});
+
+      if (!detailMovie.length == 0) {
+        res.status(200).json({ message: "success", data: detailMovie });
+      } else {
+        res.status(400).json({ message: "No movie Found", data: detailMovie });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getReview(req, res) {
+    try {
+      const options = {
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
+      };
+
+      let dataReview = await review.paginate({ deleted: false, movie_id : req.params.id_movie}, options);
+
+      if (dataReview.totalDocs > 0) {
+        res.status(200).json({ message: "success", data: dataReview });
+      } else {
+        res.status(400).json({ message: "Not Yet Reviewed", data: dataReview });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async getFeatured(req, res) {
     try {
       let dataMovie = await movie
@@ -10,7 +45,7 @@ class MovieController {
         .sort({ release_date : 1 })
         .limit(10);
 
-      if (dataMovie) {
+      if (!dataMovie.length == 0) {
         res.status(200).json({ message: "success", data: dataMovie });
       } else {
         res.status(400).json({ message: "Not Found" });
@@ -23,13 +58,13 @@ class MovieController {
   async getAll(req, res) {
     try {
       const options = {
-        page: req.query.page,
-        limit: req.query.limit,
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
       };
 
       let dataMovie = await movie.paginate({ deleted: false }, options);
 
-      if (dataMovie) {
+      if (dataMovie.totalDocs > 0) {
         res.status(200).json({ message: "success", data: dataMovie });
       } else {
         res.status(400).json({ message: "Not Found" });
@@ -43,8 +78,8 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
-        page: req.query.page,
-        limit: req.query.limit,
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
       };
 
       //initialize search Options

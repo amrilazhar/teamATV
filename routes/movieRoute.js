@@ -13,5 +13,7 @@ const movieController = require("../controllers/movieController");
 router.get("/getAll", isUser, movieController.getAll);
 router.get("/getFeatured", isUser, movieController.getFeatured);
 router.get("/search", isUser, movieController.search);
+router.get("/detail/:id_movie", isUser, movieController.detail);
+router.get("/getReview/:id_movie", isUser, movieController.getReview);
 
 module.exports = router;
