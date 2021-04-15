@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongoose_delete = require("mongoose-delete");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const MovieSchema = new mongoose.Schema(
   {
@@ -71,6 +72,10 @@ const MovieSchema = new mongoose.Schema(
     user_reviewed : {
       type : Array,
       required : false,
+    },
+    avg_rating : {
+      type : Number,
+      required : false,
     }
   },
   {
@@ -81,7 +86,7 @@ const MovieSchema = new mongoose.Schema(
   }
 );
 
-
+MovieSchema.plugin(mongoosePaginate);
 MovieSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 module.exports = mongoose.model("movies", MovieSchema, "movies");
