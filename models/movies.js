@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongoose_delete = require("mongoose-delete");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const MovieSchema = new mongoose.Schema(
   {
@@ -8,7 +9,7 @@ const MovieSchema = new mongoose.Schema(
       required: true,
     },
     director : {
-      type: mongoose.Schema.ObjectId,
+      type: String,
       required: false,
     },
     budget: {
@@ -24,10 +25,6 @@ const MovieSchema = new mongoose.Schema(
       required: false,
     },
     genre: {
-      type: Array,
-      required: false,
-    },
-    tags: {
       type: Array,
       required: false,
     },
@@ -48,14 +45,6 @@ const MovieSchema = new mongoose.Schema(
       required: false,
       default:"images/defaultPoster.jpg",
     },
-    count_review: {
-      type: Number,
-      required: false,
-    },
-    total_rating: {
-      type: Number,
-      required: false,
-    },
     characters: {
       type: Array,
       required: false,
@@ -68,8 +57,8 @@ const MovieSchema = new mongoose.Schema(
       type :  mongoose.Schema.ObjectId,
       required : false,
     },
-    user_reviewed : {
-      type : Array,
+    avg_rating : {
+      type : Number,
       required : false,
     }
   },
@@ -81,7 +70,7 @@ const MovieSchema = new mongoose.Schema(
   }
 );
 
-
+MovieSchema.plugin(mongoosePaginate);
 MovieSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 module.exports = mongoose.model("movies", MovieSchema, "movies");
