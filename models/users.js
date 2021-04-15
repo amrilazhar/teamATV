@@ -32,10 +32,6 @@ const UserSchema = new mongoose.Schema(
       required: false,
       get : getImage,
     },
-    reviewed_movie: {
-      type: Array,
-      required: false,
-    },
   },
   {
     timestamps: {
