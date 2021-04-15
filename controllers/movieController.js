@@ -5,8 +5,22 @@ class MovieController {
 
   async detail(req, res) {
     try {
-
+      //get movie detail info
       let detailMovie = await movie.find({ deleted: false, _id : req.params.id_movie});
+
+      //cek if user has reviewed the movie
+      console.log(req.user.id);
+      console.log(req.params.id_movie);
+      let cekReview = await review.find({ user_id : req.user.id , movie_id : req.params.id_movie });
+      //set review Status
+      console.log(cekReview);
+      if (cekReview.length == 0) {
+        detailMovie[0]._doc.reviewStatus = false;
+        detailMovie[0]._doc.reviewID = null ;
+      } else {
+        detailMovie[0]._doc.reviewStatus = true;
+        detailMovie[0]._doc.reviewID = cekReview[0]._id ;
+      }
 
       if (!detailMovie.length == 0) {
         res.status(200).json({ message: "success", data: detailMovie });

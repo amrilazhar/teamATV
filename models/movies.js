@@ -28,10 +28,6 @@ const MovieSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
-    tags: {
-      type: Array,
-      required: false,
-    },
     trailer: {
       type: String,
       required: false,
@@ -49,14 +45,6 @@ const MovieSchema = new mongoose.Schema(
       required: false,
       default:"images/defaultPoster.jpg",
     },
-    count_review: {
-      type: Number,
-      required: false,
-    },
-    total_rating: {
-      type: Number,
-      required: false,
-    },
     characters: {
       type: Array,
       required: false,
@@ -67,10 +55,6 @@ const MovieSchema = new mongoose.Schema(
     },
     updatedBy : {
       type :  mongoose.Schema.ObjectId,
-      required : false,
-    },
-    user_reviewed : {
-      type : Array,
       required : false,
     },
     avg_rating : {
