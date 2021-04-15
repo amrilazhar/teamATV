@@ -215,4 +215,32 @@ let isUser = async (req, res, next) => {
     });
   }
 };
-module.exports = { doAuth, isAdmin, isUser };
+
+let isUserOrGlobal = async (req, res, next) => {
+  try {
+    passport.authorize("user", { session: false }, (err, user, info) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Internal server Error",
+          error: err,
+        });
+      }
+
+      // If user is not exist, still next as guest
+      if (user) {
+        req.user = user;
+      }
+      next();
+
+    })(req, res, next);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      message: "internal server error",
+      error: err,
+    });
+  }
+};
+
+module.exports = { doAuth, isAdmin, isUser , isUserOrGlobal};

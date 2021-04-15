@@ -8,18 +8,17 @@ class MovieController {
       //get movie detail info
       let detailMovie = await movie.find({ deleted: false, _id : req.params.id_movie});
 
-      //cek if user has reviewed the movie
-      console.log(req.user.id);
-      console.log(req.params.id_movie);
-      let cekReview = await review.find({ user_id : req.user.id , movie_id : req.params.id_movie });
-      //set review Status
-      console.log(cekReview);
-      if (cekReview.length == 0) {
-        detailMovie[0]._doc.reviewStatus = false;
-        detailMovie[0]._doc.reviewID = null ;
-      } else {
-        detailMovie[0]._doc.reviewStatus = true;
-        detailMovie[0]._doc.reviewID = cekReview[0]._id ;
+      if (req.user) {
+        //cek if user has reviewed the movie
+        let cekReview = await review.find({ user_id : req.user.id , movie_id : req.params.id_movie });
+        //set review Status
+        if (cekReview.length == 0) {
+          detailMovie[0]._doc.reviewStatus = false;
+          detailMovie[0]._doc.reviewID = null ;
+        } else {
+          detailMovie[0]._doc.reviewStatus = true;
+          detailMovie[0]._doc.reviewID = cekReview[0]._id ;
+        }
       }
 
       if (!detailMovie.length == 0) {
@@ -29,14 +28,15 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
+      res.status(500).json({message : "Internal server error"})
     }
   }
 
   async getReview(req, res) {
     try {
       const options = {
-        page: req.query.page ? req.query.page : 1,
-        limit: req.query.limit ? req.query.limit : 10,
+        page: req.query.page,
+        limit: req.query.limit,
       };
 
       let dataReview = await review.paginate({ deleted: false, movie_id : req.params.id_movie}, options);
@@ -48,6 +48,7 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
+      res.status(500).json({message : "Internal server error"})
     }
   }
 
@@ -66,14 +67,15 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
+      res.status(500).json({message : "Internal server error"})
     }
   }
 
   async getAll(req, res) {
     try {
       const options = {
-        page: req.query.page ? req.query.page : 1,
-        limit: req.query.limit ? req.query.limit : 10,
+        page: req.query.page,
+        limit: req.query.limit,
       };
 
       let dataMovie = await movie.paginate({ deleted: false }, options);
@@ -85,6 +87,7 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
+      res.status(500).json({message : "Internal server error"})
     }
   }
 
@@ -92,8 +95,8 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
-        page: req.query.page ? req.query.page : 1,
-        limit: req.query.limit ? req.query.limit : 10,
+        page: req.query.page,
+        limit: req.query.limit,
       };
 
       //initialize search Options
@@ -154,6 +157,7 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
+      res.status(500).json({message : "Internal server error"})
     }
   }
 }
