@@ -17,6 +17,8 @@ passport.use(
     },
     async (req, email, password, done) => {
       try {
+        //set default role to user
+        req.body.role = 'user';
         let userSignUp = await user.create(req.body);
         // If success
         return done(null, userSignUp, {
