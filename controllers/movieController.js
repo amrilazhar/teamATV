@@ -160,6 +160,65 @@ class MovieController {
       res.status(500).json({message : "Internal server error"})
     }
   }
+
+  async create(req, res) {
+    try {
+
+      let data = await movie.create(req.body);
+
+      return res.status(201).json({
+        message: "Success",
+        data,
+      });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: e,
+      });
+    }
+  }
+
+  async update(req, res) {
+    try {
+      
+      let data = await movie.findOneAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        req.body,
+        {
+          new: true,
+        }
+      );
+
+      return res.status(201).json({
+        message: "Success",
+        data,
+      });
+    } catch (e) {
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: e,
+      });
+    }
+  }
+
+  async delete(req, res) {
+    try {
+
+      await movie.delete({ _id: req.params.id });
+
+      return res.status(200).json({
+        message: "Success",
+      });
+    } catch (e) {
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: e,
+      });
+    }
+  }
 }
 
 module.exports = new MovieController();

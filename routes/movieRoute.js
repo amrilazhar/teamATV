@@ -16,5 +16,8 @@ router.get("/getFeatured", movieController.getFeatured);
 router.get("/search", isUserOrGlobal, searchValidator.search, movieController.search);
 router.get("/detail/:id_movie", isUserOrGlobal, searchValidator.detailMovie, movieController.detail);
 router.get("/getReview/:id_movie", isUserOrGlobal, searchValidator.getReview, movieController.getReview);
+router.post("/", isAdmin, movieValidator.create, movieController.create);
+router.put("/:id", isAdmin, movieValidator.update, movieController.update);
+router.delete("/:id", isAdmin, movieValidator.delete, movieController.delete);
 
 module.exports = router;
