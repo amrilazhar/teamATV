@@ -106,7 +106,9 @@ class MovieController {
 
       // add filter genre if the query params not null
       if (req.query.genre) {
-        let genre = req.query.genre.split(",");
+        let genre = req.query.genre.split(",").map( item => {
+          return item[0].toUpperCase() + item.slice(1);
+        });
         searchOpt.genre = { $all: genre };
       }
 

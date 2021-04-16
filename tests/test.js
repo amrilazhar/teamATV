@@ -1,21 +1,19 @@
 const request = require("supertest");
 const app = require("../index");
 
-const { transaksi } = require("../models"); // import transaksi models
 const { user } = require("../models"); // import transaksi models
 
 let authenticationToken = "0";
 
-describe("tes User", () => {
+describe("Authentication TEST", () => {
   describe("/POST Sign Up", () => {
     test("It should make user and get authentication_key (jwt)", async () => {
       await user.deleteMany();
       const res = await request(app).post("/auth/signup").send({
         name: "mas Reza",
         email: "fahmialfareza@icloud.com",
-        password: "Aneh1234!!",
-        confirmPassword: "Aneh1234!!",
-        role: "admin",
+        password: "Pasword123!!",
+        confirmPassword: "Pasword123!!",
       });
 
       expect(res.statusCode).toEqual(200);
@@ -29,7 +27,7 @@ describe("tes User", () => {
     test("It should make user login and get authentication_key (jwt)", async () => {
       const res = await request(app).post("/auth/login").send({
         email: "fahmialfareza@icloud.com",
-        password: "Aneh1234!!",
+        password: "Pasword123!!",
       });
 
       expect(res.statusCode).toEqual(200);
@@ -40,14 +38,13 @@ describe("tes User", () => {
     });
   });
 
-  describe("/POST Sign Up Gagal Nama", () => {
-    test("It should return status 400", async () => {
+  describe("/POST Sign Up Name not Valid", () => {
+    test("It should return status 400 and error message", async () => {
       const res = await request(app).post("/auth/signup").send({
         name: "mas Reza123",
         email: "fahmialfareza@icloud.com",
-        password: "Aneh1234!!",
-        confirmPassword: "Aneh1234!!",
-        role: "admin",
+        password: "Pasword123!!",
+        confirmPassword: "Pasword123!!",
       });
 
       expect(res.statusCode).toEqual(400);
@@ -56,14 +53,13 @@ describe("tes User", () => {
     });
   });
 
-  describe("/POST Sign Up Gagal Email", () => {
-    test("It should return status 400", async () => {
+  describe("/POST Sign Up Email not Valid", () => {
+    test("It should return status 400 and error message", async () => {
       const res = await request(app).post("/auth/signup").send({
         name: "mas Reza",
         email: "fahmialfarezaicloud.com",
-        password: "Aneh1234!!",
-        confirmPassword: "Aneh1234!!",
-        role: "admin",
+        password: "Pasword123!!",
+        confirmPassword: "Pasword123!!",
       });
 
       expect(res.statusCode).toEqual(400);
@@ -72,14 +68,13 @@ describe("tes User", () => {
     });
   });
 
-  describe("/POST Sign Up Gagal password kurang kuat", () => {
-    test("It should return status 400", async () => {
+  describe("/POST Sign Up Weak Password", () => {
+    test("It should return status 400 and error message", async () => {
       const res = await request(app).post("/auth/signup").send({
         name: "mas Reza",
         email: "fahmialfareza@icloud.com",
-        password: "Aneh1234",
-        confirmPassword: "Aneh1234",
-        role: "admin",
+        password: "Pasword123",
+        confirmPassword: "Pasword123",
       });
 
       expect(res.statusCode).toEqual(400);
@@ -88,14 +83,13 @@ describe("tes User", () => {
     });
   });
 
-  describe("/POST Sign Up Gagal password tidak sama", () => {
-    test("It should return status 401", async () => {
+  describe("/POST Sign Up Password not Match", () => {
+    test("It should return status 400 and error message", async () => {
       const res = await request(app).post("/auth/signup").send({
         name: "mas Reza",
         email: "fahmialfareza@icloud.com",
         password: "Aneh1234!!",
         confirmPassword: "Ane234",
-        role: "admin",
       });
 
       expect(res.statusCode).toEqual(400);

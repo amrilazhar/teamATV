@@ -17,6 +17,8 @@ passport.use(
     },
     async (req, email, password, done) => {
       try {
+        //set default role to user
+        req.body.role = 'user';
         let userSignUp = await user.create(req.body);
         // If success
         return done(null, userSignUp, {
@@ -109,15 +111,24 @@ passport.use(
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
     async (token, done) => {
-      const userSignin = await user.findOne({
-        email: token.user.email,
-      });
+      try {
+        const userSignin = await user.findOne({
+          email: token.user.email,
+        });
 
-      if (userSignin.role.includes("user") || userSignin.role.includes("admin")) {
-        return done(null, token.user);
+        if (!userSignIn.role) {
+          return done(null, false, { message: "you are not Authorized" });
+        }
+
+        if (userSignin.role.includes("user") || userSignin.role.includes("admin")) {
+          return done(null, token.user);
+        }
+
+        return done(null, false, { message: "you are not Authorized" });
+      } catch (e) {
+        console.log(e);
       }
 
-      return done(null, false, { message: "you are not Authorized" });
     }
   )
 );
