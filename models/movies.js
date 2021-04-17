@@ -68,6 +68,10 @@ const MovieSchema = new mongoose.Schema(
     avg_rating : {
       type : Number,
       required : false,
+    },
+    count_review : {
+      type : Number,
+      required : false,
     }
   },
   {
@@ -80,7 +84,7 @@ const MovieSchema = new mongoose.Schema(
 );
 
 function getImagePoster(image) {
-  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster{image}` : `/images/poster${image}`;
+  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster${image}` : `/images/poster${image}`;
 }
 
 function getImageBackdrop(image) {
