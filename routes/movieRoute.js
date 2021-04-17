@@ -9,6 +9,7 @@ const { doAuth, isAdmin, isUser, isUserOrGlobal } = require("../middlewares/auth
 const movieController = require("../controllers/movieController");
 //Import Midddlewares Here
 const searchValidator = require("../middlewares/validators/searchValidator");
+const movieValidator = require("../middlewares/validators/movieValidator");
 
 //Create your Router Here
 router.get("/getAll", isUserOrGlobal, searchValidator.getAll, movieController.getAll);

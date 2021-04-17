@@ -43,11 +43,19 @@ const MovieSchema = new mongoose.Schema(
     poster: {
       type: String,
       required: false,
-      default:"images/defaultPoster.jpg",
+      default:"defaultPoster.jpg",
+      get : getImagePoster,
+    },
+    backdrop: {
+      type: String,
+      required: false,
+      default:"defaultBackdrop.jpg",
+      get : getImageBackdrop,
     },
     characters: {
       type: Array,
       required: false,
+      get : getImageCharacters,
     },
     isFeatured: {
       type: Boolean,
@@ -67,8 +75,28 @@ const MovieSchema = new mongoose.Schema(
       createdAt: "created_at",
       updatedAt: "updated_at",
     },
+    toJSON: { getters: true },
   }
 );
+
+function getImagePoster(image) {
+  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster{image}` : `/images/poster${image}`;
+}
+
+function getImageBackdrop(image) {
+  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/backdrop${image}` : `/images/backdrop${image}`;
+}
+
+function getImageCharacters(data) {
+  let ret = data.map( item => {
+    let obj = {
+      role_name : item.role_name,
+      photo : process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/cast${item.photo}` : `/images/cast${item.photo}`
+    };
+    return obj;
+  });
+  return ret;
+}
 
 MovieSchema.plugin(mongoosePaginate);
 MovieSchema.plugin(mongoose_delete, { overrideMethods: "all" });
