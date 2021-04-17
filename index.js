@@ -45,6 +45,9 @@ app.use("/user", userRoutes);
 const personRoutes = require("./routes/personRoute.js");
 app.use("/person", personRoutes);
 
+const genreRoutes = require("./routes/genreRoute.js");
+app.use("/genre", genreRoutes);
+
 //======================== security code ==============================//
 // Sanitize data
 app.use(mongoSanitize());
