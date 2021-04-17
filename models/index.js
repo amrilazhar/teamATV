@@ -17,5 +17,6 @@ const user = require("./users.js");
 const movie = require("./movies.js");
 const review = require("./reviews.js");
 const person = require("./persons.js");
+const genre = require("./genres.js");
 
-module.exports = { user, movie, review, person };
+module.exports = { user, movie, review, person, genre };
