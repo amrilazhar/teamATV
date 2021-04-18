@@ -123,6 +123,7 @@ passport.use(
 );
 
 let doAuth = async (req, res, next) => {
+  // console.log(req)
   try {
     //get the user act (login or signup)
     let act = req.route.path.substring(1);

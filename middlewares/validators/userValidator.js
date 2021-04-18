@@ -6,7 +6,7 @@ class UserValidator {
       let act = req.route.path.substring(1);
       let errors = [];
 
-      if (act === "signup") {
+      if (act === "signup" || act === "userProfile") {
         if (!validator.isAlpha(validator.blacklist(req.body.name, " "))) {
           errors.push("Name must be alphabet");
         }
