@@ -8,7 +8,7 @@ class MovieController {
       //get movie detail info
       let detailMovie = await movie.find({ deleted: false, _id : req.params.id_movie});
 
-      if (req.user) {
+      if (Object.keys(req).includes('user')) {
         //cek if user has reviewed the movie
         let cekReview = await review.find({ user_id : req.user.id , movie_id : req.params.id_movie });
         //set review Status
@@ -105,7 +105,7 @@ class MovieController {
       };
 
       // add filter genre if the query params not null
-      if (req.query.genre) {
+      if (Object.keys(req.query).includes('genre')) {
         let genre = req.query.genre.split(",").map( item => {
           return item[0].toUpperCase() + item.slice(1);
         });
@@ -113,24 +113,24 @@ class MovieController {
       }
 
       // add filter title if the query params not null
-      if (req.query.title) {
+      if (Object.keys(req.query).includes('title')) {
         let stringRegex = ".*" + req.query.title + ".*";
         searchOpt.title = new RegExp(stringRegex);
       }
 
       // add filter status (released/upcoming) if the query params not null
-      if (req.query.status) {
+      if (Object.keys(req.query).includes('status')) {
         searchOpt.isReleased = req.query.status == "released" ? true : false;
       }
 
       // add filter rated (G / R / etc) if the query params not null
-      if (req.query.rated) {
+      if (Object.keys(req.query).includes('rated')) {
         let stringRegex = ".*" + req.query.rated + ".*";
         searchOpt.rated = new RegExp(stringRegex);
       }
 
       // add filter release_date if the query params not null
-      if (req.query.release_date) {
+      if (Object.keys(req.query).includes('release_date')) {
         let release = req.query.release_date.split(",");
 
         //if input end and start date
@@ -183,7 +183,7 @@ class MovieController {
 
   async update(req, res) {
     try {
-      
+
       let data = await movie.findOneAndUpdate(
         {
           _id: req.params.id,

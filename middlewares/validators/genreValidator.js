@@ -18,7 +18,7 @@ class GenreValidator {
           errors.push("ID genre is not Valid");
 
           //if user access delete, we just need cek if the ID is valid
-          res.status(400).json({ message: "error", error: errors });
+          return res.status(400).json({ message: "error", error: errors });
         } else {
           return next();
         }
@@ -46,17 +46,17 @@ class GenreValidator {
       //////////////// General Validator for GENRE ////////////////////////////
 
       // cek if params page is defined
-      if (req.body.genre) {
+      if (Object.keys(req.body).includes("genre")) {
         //cek if param page is number
         if (!validator.isAlphanumeric(validator.blacklist(req.body.genre, " "))) {
           errors.push("genre must be alphanumeric");
         }
       } else {
-        errors.push("genre name not found");
+        errors.push("genre parameter not found");
       }
 
       // cek if params limit is defined
-      if (req.body.main) {
+      if (Object.keys(req.body).includes("main")) {
         //cek if param page is number
         if (!validator.isBoolean(req.body.main)) {
           errors.push("invalid main status");
@@ -68,7 +68,7 @@ class GenreValidator {
 
       // print error
       if (errors.length > 0) {
-        res.status(400).json({ message: "error", error: errors });
+        return res.status(400).json({ message: "error", error: errors });
       }
 
       return next();

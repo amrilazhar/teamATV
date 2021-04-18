@@ -48,6 +48,7 @@ class UserValidator {
     } catch (e) {
       console.log(e);
       return res.status(500).json({
+        message : "internal server error",
         error: e,
       });
     }
