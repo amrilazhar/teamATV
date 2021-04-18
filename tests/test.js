@@ -10,7 +10,7 @@ describe("Authentication TEST", () => {
     test("It should make user and get authentication_key (jwt)", async () => {
       await user.collection.dropIndexes();
       await user.deleteMany();
-      await user.collection.createIndex( { _id: 1, email: 1 } );
+      await user.collection.createIndex( { email: 1 } , { unique : true } );
       const res = await request(app).post("/auth/signup").send({
         name: "User Biasa",
         email: "biasa@icloud.com",

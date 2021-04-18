@@ -13,7 +13,7 @@ describe("Genre Feature TEST", () => {
       // delete all user, do there were no duplicate admin
       await user.deleteMany();
       await user.collection.dropIndexes();
-      await user.collection.createIndex( { _id: 1, email: 1 } );
+      await user.collection.createIndex( { email: 1 } , { unique : true } );
       //create user admin
       const dataAdmin = {
         name: "Genres Users",
@@ -21,7 +21,7 @@ describe("Genre Feature TEST", () => {
         password: "Pasword123!!",
         role: "admin",
       };
-      
+
       let userData = await user.create(dataAdmin);
       const body = {
         id: userData._id,

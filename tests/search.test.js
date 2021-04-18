@@ -15,14 +15,14 @@ describe("Movie List TEST", () => {
       //clean user data
       await user.deleteMany();
       await user.collection.dropIndexes();
-      await user.collection.createIndex( { _id: 1, email: 1 } );
+      await user.collection.createIndex( { email: 1 }, { unique : true } );
       //clean movie data
       await movie.deleteMany();
 
       //clean review data
       await review.deleteMany();
       await review.collection.dropIndexes();
-      await user.collection.createIndex( { user_id: 1, movie_id: 1 } );
+      await review.collection.createIndexes( { user_id: 1, movie_id: 1 } , { unique : true } );
       //create dummy movie data for searching
       let dummyMovie = await movie
         .create({
@@ -127,7 +127,7 @@ describe("Movie List TEST", () => {
       const res = await request(app).get(
         "/movie/search?page=5&limit=10&release_date=20000"
       );
-      
+
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
       expect(res.body.message).toEqual("error");
