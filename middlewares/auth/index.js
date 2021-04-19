@@ -116,7 +116,7 @@ passport.use(
           email: token.user.email,
         });
 
-        if (!userSignIn.role) {
+        if (!userSignin.role) {
           return done(null, false, { message: "you are not Authorized" });
         }
 
