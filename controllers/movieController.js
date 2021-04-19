@@ -2,22 +2,38 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie, person } = require("../models");
 
 class MovieController {
-
   async detail(req, res) {
     try {
       //get movie detail info
-      let detailMovie = await movie.find({ deleted: false, _id : req.params.id_movie});
+      let detailMovie = await movie.find({
+        deleted: false,
+        _id: req.params.id_movie,
+      });
 
-      if (Object.keys(req).includes('user')) {
+      if (Object.keys(req).includes("user")) {
         //cek if user has reviewed the movie
-        let cekReview = await review.find({ user_id : req.user.id , movie_id : req.params.id_movie });
+        let cekReview = await review.find({
+          user_id: req.user.id,
+          movie_id: req.params.id_movie,
+        });
         //set review Status
         if (cekReview.length == 0) {
           detailMovie[0]._doc.reviewStatus = false;
-          detailMovie[0]._doc.reviewID = null ;
+          detailMovie[0]._doc.reviewID = null;
         } else {
           detailMovie[0]._doc.reviewStatus = true;
-          detailMovie[0]._doc.reviewID = cekReview[0]._id ;
+          detailMovie[0]._doc.reviewID = cekReview[0]._id;
+        }
+
+        //cek if user has add watchlist of the movie
+        let cekWatch = await user
+          .find({ user_id: req.user.id })
+          .select("watchlist")
+          .exec();
+        if (cekWatch.includes(req.params.id_movie)) {
+          detailMovie[0]._doc.watchlistStatus = true;
+        } else {
+          detailMovie[0]._doc.watchlistStatus = false;
         }
       }
 
@@ -28,27 +44,32 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({message : "Internal server error"})
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
   async getReview(req, res) {
     try {
       const options = {
-        page: req.query.page,
-        limit: req.query.limit,
+        select : "rating review updated_at",
+        populate : { path: 'user_id', select: 'name profile_picture' },
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
       };
 
-      let dataReview = await review.paginate({ deleted: false, movie_id : req.params.id_movie}, options);
+      let dataReview = await review.paginate(
+        { deleted: false, movie_id: req.params.id_movie },
+        options
+      );
 
       if (dataReview.totalDocs > 0) {
-        res.status(200).json({ message: "success", data: dataReview });
+        return res.status(200).json({ message: "success", data: dataReview });
       } else {
-        res.status(400).json({ message: "Not Yet Reviewed", data: dataReview });
+        return res.status(400).json({ message: "Not Yet Reviewed", data: dataReview });
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({message : "Internal server error"})
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -56,8 +77,8 @@ class MovieController {
     try {
       let dataMovie = await movie
         .find({ isFeatured: true })
-        .select("title poster avg_rating")
-        .sort({ release_date : 1 })
+        .select("title poster avg_rating backdrop")
+        .sort({ release_date: 1 })
         .limit(10);
 
       if (!dataMovie.length == 0) {
@@ -67,15 +88,16 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({message : "Internal server error"})
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
   async getAll(req, res) {
     try {
       const options = {
-        page: req.query.page,
-        limit: req.query.limit,
+        select : "title poster avg_rating genre" ,
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
       };
 
       let dataMovie = await movie.paginate({ deleted: false }, options);
@@ -87,7 +109,7 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({message : "Internal server error"})
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -95,8 +117,8 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
-        page: req.query.page,
-        limit: req.query.limit,
+        page: req.query.page ? req.query.page : 1,
+        limit: req.query.limit ? req.query.limit : 10,
       };
 
       //initialize search Options
@@ -105,32 +127,32 @@ class MovieController {
       };
 
       // add filter genre if the query params not null
-      if (Object.keys(req.query).includes('genre')) {
-        let genre = req.query.genre.split(",").map( item => {
+      if (Object.keys(req.query).includes("genre")) {
+        let genre = req.query.genre.split(",").map((item) => {
           return item[0].toUpperCase() + item.slice(1);
         });
         searchOpt.genre = { $all: genre };
       }
 
       // add filter title if the query params not null
-      if (Object.keys(req.query).includes('title')) {
+      if (Object.keys(req.query).includes("title")) {
         let stringRegex = ".*" + req.query.title + ".*";
         searchOpt.title = new RegExp(stringRegex);
       }
 
       // add filter status (released/upcoming) if the query params not null
-      if (Object.keys(req.query).includes('status')) {
+      if (Object.keys(req.query).includes("status")) {
         searchOpt.isReleased = req.query.status == "released" ? true : false;
       }
 
       // add filter rated (G / R / etc) if the query params not null
-      if (Object.keys(req.query).includes('rated')) {
+      if (Object.keys(req.query).includes("rated")) {
         let stringRegex = ".*" + req.query.rated + ".*";
         searchOpt.rated = new RegExp(stringRegex);
       }
 
       // add filter release_date if the query params not null
-      if (Object.keys(req.query).includes('release_date')) {
+      if (Object.keys(req.query).includes("release_date")) {
         let release = req.query.release_date.split(",");
 
         //if input end and start date
@@ -159,13 +181,12 @@ class MovieController {
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({message : "Internal server error"})
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
   async create(req, res) {
     try {
-
       let data = await movie.create(req.body);
 
       return res.status(201).json({
@@ -183,7 +204,6 @@ class MovieController {
 
   async update(req, res) {
     try {
-
       let data = await movie.findOneAndUpdate(
         {
           _id: req.params.id,
@@ -208,7 +228,6 @@ class MovieController {
 
   async delete(req, res) {
     try {
-
       await movie.delete({ _id: req.params.id });
 
       return res.status(200).json({
