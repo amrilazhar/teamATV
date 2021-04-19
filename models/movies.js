@@ -27,6 +27,7 @@ const MovieSchema = new mongoose.Schema(
     genre: {
       type: Array,
       required: false,
+      get : getGenre,
     },
     trailer: {
       type: String,
@@ -83,16 +84,30 @@ const MovieSchema = new mongoose.Schema(
   }
 );
 
+function getGenre(genre) {
+  return genre.map((item)=>{
+    return { name : item };
+  });
+}
 function getImagePoster(image) {
+  if (image[0] !== "/") {
+    image = "/" + image;
+  }
   return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster${image}` : `/images/poster${image}`;
 }
 
 function getImageBackdrop(image) {
+  if (image[0] !== "/") {
+    image = "/" + image;
+  }
   return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/backdrop${image}` : `/images/backdrop${image}`;
 }
 
 function getImageCharacters(data) {
   let ret = data.map( item => {
+    if (item.photo[0] !== "/") {
+      item.photo = "/" + item.photo;
+    }
     let obj = {
       role_name : item.role_name,
       photo : process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/cast${item.photo}` : `/images/cast${item.photo}`
