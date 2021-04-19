@@ -11,8 +11,8 @@ describe("Genre Feature TEST", () => {
   describe("/POST Create Genre", () => {
     test("It should insert new genre", async () => {
       // delete all user, do there were no duplicate admin
-      await user.deleteMany();
       await user.collection.dropIndexes();
+      await user.deleteMany();      
       await user.collection.createIndex( { email: 1 } , { unique : true } );
       //create user admin
       const dataAdmin = {
