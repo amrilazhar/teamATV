@@ -20,6 +20,7 @@ test:
   script:
     - echo "MONGO_URI"=$ENVIRONMENT_TEST_MONGO_URI > .env.test
     - echo "JWT_SECRET"=$ENVIRONMENT_TEST_JWT_SECRET >> .env.test
+    - echo "PUBLIC_URL"=$PUBLIC_URL >> .env.production
     - npm i
     - npm run test
   # Defines the names of branches and tags the job runs for
@@ -39,6 +40,7 @@ deploy:
     - cd $PROJECT_DIR
     - echo "MONGO_URI"=$ENVIRONMENT_PRODUCTION_MONGO_URI > .env.production
     - echo "JWT_SECRET"=$ENVIRONMENT_PRODUCTION_JWT_SECRET >> .env.production
+    - echo "PUBLIC_URL"=$PUBLIC_URL >> .env.production
     - npm i
     # Restart NodeJS service
     - npm run stop
