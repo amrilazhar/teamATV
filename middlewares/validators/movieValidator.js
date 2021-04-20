@@ -66,7 +66,6 @@ exports.create = async (req, res, next) => {
             file.mv(`./public/images/${file.name}`, async (err) => {
                 if (err) {
                     console.log(err);
-
                     return res.status(500).json({
                         message: "Internal Server Error",
                         error: err.message,
