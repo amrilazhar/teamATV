@@ -51,7 +51,7 @@ passport.use(
     },
     async (req, email, password, done) => {
       try {
-        const userSignIn = await user.findOne({
+        const userSignin = await user.findOne({
           email,
         });
 
@@ -61,14 +61,14 @@ passport.use(
           });
         }
 
-        const validate = await bcrypt.compare(password, userSignIn.password);
+        const validate = await bcrypt.compare(password, userSignin.password);
 
         if (!validate) {
           return done(null, false, {
             message: "Wrong password!",
           });
         }
-        return done(null, userSignIn, {
+        return done(null, userSignin, {
           message: "Login success!",
         });
       } catch (e) {
@@ -90,11 +90,11 @@ passport.use(
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
     async (token, done) => {
-      const userSignIn = await user.findOne({
+      const userSignin = await user.findOne({
         email: token.user.email,
       },"role");
 
-      if (userSignIn.role.includes("admin")) {
+      if (userSignin.role.includes("admin")) {
         return done(null, token.user);
       }
 
@@ -112,15 +112,15 @@ passport.use(
     },
     async (token, done) => {
       try {
-        const userSignIn = await user.findOne({
+        const userSignin = await user.findOne({
           email: token.user.email,
         });
 
-        if (!userSignIn.role) {
+        if (!userSignin.role) {
           return done(null, false, { message: "you are not Authorized" });
         }
 
-        if (userSignIn.role.includes("user") || userSignIn.role.includes("admin")) {
+        if (userSignin.role.includes("user") || userSignin.role.includes("admin")) {
           return done(null, token.user);
         }
 
