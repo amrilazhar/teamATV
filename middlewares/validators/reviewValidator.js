@@ -13,7 +13,7 @@ exports.create = async (req, res, next) => {
             );
         }
 
-        // Check id_pelanggan is valid or not
+        // Check movie_id is valid or not
         // If the parameters is not valid it will go here
         if (errors.length > 0) {
             return res.status(400).json({
@@ -26,18 +26,18 @@ exports.create = async (req, res, next) => {
             movie.findOne({ _id: req.body.movie_id }),
         ]);
 
-        // if barang not found
+        // if movie not found
         if (!findData[0]) {
-            errors.push("Barang not found");
+            errors.push("Movie not found");
         }
 
         // Check is jumlah numeric?
         if (!validator.isNumeric(req.body.rating)) {
-            errors.push("Jumlah must be a number");
-        }
-
-        if (!validator.isAlpha(req.body.review)) {
-            errors.push("Jumlah must be a number");
+            errors.push("Rating must be a number");
+        } else {
+          if (req.body.rating > 5 || req.body.rating < 1 ) {
+            errors.push("Rating must be a number 1 to 5");
+          }
         }
 
         // If errors
@@ -47,8 +47,6 @@ exports.create = async (req, res, next) => {
             });
         }
 
-        // Calculate total
-        req.body.movie_id = findData[0];
         // Go to next
         next();
     } catch (e) {
@@ -103,22 +101,18 @@ exports.update = async (req, res, next) => {
 
         // Check jumlah is numeric
         if (!validator.isNumeric(req.body.rating)) {
-            errors.push("Jumlah must be a number");
+            errors.push("Rating must be a number");
+        } else {
+          if (req.body.rating > 5 || req.body.rating < 1 ) {
+            errors.push("Rating must be a number 1 to 5");
+          }
         }
 
-        if (!validator.isAlpha(req.body.review)) {
-
-            errors.push("Jumlah must be a number");
-        }
-        // If error
         if (errors.length > 0) {
             return res.status(400).json({
                 message: errors.join(", "),
             });
         }
-
-        // Calculate total
-        req.body.movie_id = findData[0];
 
         // Go to next
         next();
@@ -148,12 +142,12 @@ exports.delete = async (req, res, next) => {
             });
         }
 
-        // Find one transaksi
+        // Find one Review
         let data = await review.findOne({ _id: req.params.id });
 
-        // If transaksi not found
+        // If Review not found
         if (!data) {
-            errors.push("Transaksi not found");
+            errors.push("Review not found");
         }
 
         // If error
