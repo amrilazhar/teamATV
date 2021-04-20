@@ -119,7 +119,7 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
-        select : "title poster avg_rating genre",
+        select : "title poster avg_rating genre release_date",
         sort : { release_date : -1 },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
@@ -141,7 +141,7 @@ class MovieController {
       // add filter title if the query params not null
       if (Object.keys(req.query).includes("title")) {
         let stringRegex = ".*" + req.query.title + ".*";
-        searchOpt.title = new RegExp(stringRegex);
+        searchOpt.title = new RegExp(stringRegex, 'i');
       }
 
       // add filter status (released/upcoming) if the query params not null

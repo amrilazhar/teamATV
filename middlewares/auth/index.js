@@ -90,11 +90,11 @@ passport.use(
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
     async (token, done) => {
-      const userSignin = await user.findOne({
+      const userSignIn = await user.findOne({
         email: token.user.email,
       },"role");
 
-      if (userSignin.role.includes("admin")) {
+      if (userSignIn.role.includes("admin")) {
         return done(null, token.user);
       }
 
@@ -112,7 +112,7 @@ passport.use(
     },
     async (token, done) => {
       try {
-        const userSignin = await user.findOne({
+        const userSignIn = await user.findOne({
           email: token.user.email,
         });
 
@@ -120,7 +120,7 @@ passport.use(
           return done(null, false, { message: "you are not Authorized" });
         }
 
-        if (userSignin.role.includes("user") || userSignin.role.includes("admin")) {
+        if (userSignIn.role.includes("user") || userSignIn.role.includes("admin")) {
           return done(null, token.user);
         }
 
