@@ -133,7 +133,7 @@ describe("Authentication TEST", () => {
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toEqual("Email tidak valid");
+      expect(res.body.message).toEqual("Email is not valid");
     });
   });
 
@@ -165,7 +165,7 @@ describe("Authentication TEST", () => {
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toEqual("password tidak sama");
+      expect(res.body.message).toEqual("password does not match");
     });
   });
 });
