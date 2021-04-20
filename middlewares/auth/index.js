@@ -116,7 +116,7 @@ passport.use(
           email: token.user.email,
         });
 
-        if (!userSignIn.role) {
+        if (!userSignin.role) {
           return done(null, false, { message: "you are not Authorized" });
         }
 
@@ -134,7 +134,6 @@ passport.use(
 );
 
 let doAuth = async (req, res, next) => {
-  // console.log(req)
   try {
     //get the user act (login or signup)
     let act = req.route.path.substring(1);

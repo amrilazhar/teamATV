@@ -23,14 +23,15 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: "user",
     },
-    watchlist: {
-      type: Array,
-      required: false,
-    },
+    watchlist : [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "movies",
+    }],
     profile_picture: {
       type: String,
       required: false,
       get : getImage,
+      default: "profile.jpg",
     },
   },
   {
