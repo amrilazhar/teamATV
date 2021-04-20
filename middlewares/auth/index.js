@@ -51,24 +51,24 @@ passport.use(
     },
     async (req, email, password, done) => {
       try {
-        const userSignIn = await user.findOne({
+        const userSignin = await user.findOne({
           email,
         });
 
-        if (!userSignIn) {
+        if (!userSignin) {
           return done(null, false, {
             message: "User is not found!",
           });
         }
 
-        const validate = await bcrypt.compare(password, userSignIn.password);
+        const validate = await bcrypt.compare(password, userSignin.password);
 
         if (!validate) {
           return done(null, false, {
             message: "Wrong password!",
           });
         }
-        return done(null, userSignIn, {
+        return done(null, userSignin, {
           message: "Login success!",
         });
       } catch (e) {

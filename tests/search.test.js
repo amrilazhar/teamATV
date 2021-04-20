@@ -13,8 +13,8 @@ describe("Movie List TEST", () => {
     test("It should return list of all movies, with pagination", async () => {
       //clean up the data first
       //clean user data
-      await user.deleteMany();
       await user.collection.dropIndexes();
+      await user.deleteMany();      
       await user.collection.createIndex( { email: 1 }, { unique : true } );
       //clean movie data
       await movie.deleteMany();

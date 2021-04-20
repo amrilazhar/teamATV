@@ -5,12 +5,14 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const ReviewSchema = new mongoose.Schema(
   {
     user_id : {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
       required: true,
     },
     movie_id : {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref : 'movies',
     },
     rating: {
       type: Number,

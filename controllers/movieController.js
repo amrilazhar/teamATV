@@ -51,6 +51,12 @@ class MovieController {
   async getReview(req, res) {
     try {
       const options = {
+<<<<<<< HEAD
+=======
+        select : "rating review updated_at",
+        sort : { release_date : -1 },
+        populate : { path: 'user_id', select: 'name profile_picture' },
+>>>>>>> reviewGet_revision_amr
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
       };
@@ -61,9 +67,9 @@ class MovieController {
       );
 
       if (dataReview.totalDocs > 0) {
-        res.status(200).json({ message: "success", data: dataReview });
+        return res.status(200).json({ message: "success", data: dataReview });
       } else {
-        res.status(400).json({ message: "Not Yet Reviewed", data: dataReview });
+        return res.status(400).json({ message: "Not Yet Reviewed", data: dataReview });
       }
     } catch (e) {
       console.log(e);
@@ -75,8 +81,13 @@ class MovieController {
     try {
       let dataMovie = await movie
         .find({ isFeatured: true })
+<<<<<<< HEAD
         .select("title poster avg_rating backdrop")
         .sort({ release_date: 1 })
+=======
+        .select("title poster avg_rating backdrop release_date")
+        .sort({ release_date: -1 })
+>>>>>>> reviewGet_revision_amr
         .limit(10);
 
       if (!dataMovie.length == 0) {
@@ -93,7 +104,12 @@ class MovieController {
   async getAll(req, res) {
     try {
       const options = {
+<<<<<<< HEAD
         select : "title poster avg_rating genre" ,
+=======
+        select : "title poster avg_rating genre release_date",
+        sort : { release_date : -1 },
+>>>>>>> reviewGet_revision_amr
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
       };
@@ -115,6 +131,11 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
+<<<<<<< HEAD
+=======
+        select : "title poster avg_rating genre release_date",
+        sort : { release_date : -1 },
+>>>>>>> reviewGet_revision_amr
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
       };
@@ -135,7 +156,7 @@ class MovieController {
       // add filter title if the query params not null
       if (Object.keys(req.query).includes("title")) {
         let stringRegex = ".*" + req.query.title + ".*";
-        searchOpt.title = new RegExp(stringRegex);
+        searchOpt.title = new RegExp(stringRegex, 'i');
       }
 
       // add filter status (released/upcoming) if the query params not null
