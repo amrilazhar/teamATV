@@ -12,6 +12,8 @@ mongoose
   .then(() => console.log("database connected"))
   .catch((e) => console.log(e));
 
+  console.log(uri)
+
 
 const user = require("./users.js");
 const movie = require("./movies.js");

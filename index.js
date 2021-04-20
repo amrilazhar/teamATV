@@ -39,8 +39,8 @@ app.use("/movie", movieRoutes);
 const reviewRoutes = require("./routes/reviewRoute.js");
 app.use("/review", reviewRoutes);
 
-const userRoutes = require("./routes/userRoute.js");
-app.use("/user", userRoutes);
+// const userRoutes = require("./routes/userRoute.js");
+// app.use("/user", userRoutes);
 
 const personRoutes = require("./routes/personRoute.js");
 app.use("/person", personRoutes);
