@@ -35,6 +35,7 @@ ReviewSchema.index({ movie_id: 1, user_id: 1 }, { unique: true });
 
 // Static method to get averaga rating
 ReviewSchema.statics.getAverageRating = async function (movieId) {
+
   const obj = await this.aggregate([
     {
       $match: { movie_id: movieId },
@@ -58,6 +59,11 @@ ReviewSchema.statics.getAverageRating = async function (movieId) {
 
 // call getAverageCost after save
 ReviewSchema.post("save", function () {
+  this.constructor.getAverageRating(this.movie_id);
+});
+
+// call getAverageCost after update
+ReviewSchema.post("update", function () {
   this.constructor.getAverageRating(this.movie_id);
 });
 
