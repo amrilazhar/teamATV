@@ -74,7 +74,7 @@ class UserController {
           let dataWatchlist = await user.find({ _id : req.user.id})
           .populate({ 
             select: "poster title release_date genre",
-            path: "movies"}).exec();
+            path: "movies"}).exec()
           let userWatchlist = dataWatchlist[0].watchlist;
           if (userWatchlist == 0) {
             return res.status(404).json({ message: "Watchlist is empty" });
