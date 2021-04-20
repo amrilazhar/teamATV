@@ -71,7 +71,10 @@ class UserController {
     // view watchlist of user
      async getWatchList(req, res) {
         try {
-          let dataWatchlist = await user.find({ _id : req.user.id});
+          let dataWatchlist = await user.find({ _id : req.user.id})
+          .populate({ 
+            select: "poster title release_date genre",
+            path: "movies"}).exec();
           let userWatchlist = dataWatchlist[0].watchlist;
           if (userWatchlist == 0) {
             return res.status(404).json({ message: "Watchlist is empty" });
@@ -93,7 +96,7 @@ class UserController {
                 findUser, { new: true } 
               );
           if (!insertUser) {
-            res.status(402).json({ message: "Data user can't be appeared" });
+           return res.status(402).json({ message: "Data user can't be appeared" });
           } else res.status(200).json({ message: "add watchlist success", data : insertUser });
         } catch (e) {
           console.log(e);
@@ -104,10 +107,10 @@ class UserController {
       //delete watchlist
       async deleteWatchList(req, res) {
         try {
-          let findUser = await user.findOne({  _id: req.user.id }).exec();
+          let findUser = await user.findOne({  _id: req.user.id });
           let indexOfIdMovie = findUser.watchlist.indexOf(req.query.id_movie)
           if(indexOfIdMovie < 0 ) {
-            res.status(402).json({ message: "Movie has not been added at watchlist" })
+            return res.status(403).json({ message: "Movie has not been added at watchlist" })
           } else {
           findUser.watchlist.splice(indexOfIdMovie,1) }
           let deleteMovie = await user.findOneAndUpdate(
@@ -115,7 +118,7 @@ class UserController {
                 findUser, { new: true } 
               );
           if (!deleteMovie) {
-            res.status(402).json({ message: "Data user can't be appeared" })}
+            return res.status(402).json({ message: "Data user can't be appeared" })}
           let userWatchlist = deleteMovie.watchlist;
           if (userWatchlist == 0) {
             return res.status(404).json({ message: "Watchlist is empty" })}
