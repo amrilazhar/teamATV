@@ -52,6 +52,7 @@ class MovieController {
     try {
       const options = {
         select : "rating review updated_at",
+        sort : { release_date : -1 },
         populate : { path: 'user_id', select: 'name profile_picture' },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
@@ -77,8 +78,8 @@ class MovieController {
     try {
       let dataMovie = await movie
         .find({ isFeatured: true })
-        .select("title poster avg_rating backdrop")
-        .sort({ release_date: 1 })
+        .select("title poster avg_rating backdrop release_date")
+        .sort({ release_date: -1 })
         .limit(10);
 
       if (!dataMovie.length == 0) {
@@ -95,7 +96,8 @@ class MovieController {
   async getAll(req, res) {
     try {
       const options = {
-        select : "title poster avg_rating genre" ,
+        select : "title poster avg_rating genre release_date",
+        sort : { release_date : -1 },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
       };
@@ -117,6 +119,8 @@ class MovieController {
     try {
       //Option for pagination
       const options = {
+        select : "title poster avg_rating genre",
+        sort : { release_date : -1 },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
       };
