@@ -3,7 +3,7 @@ const { user } = require("../models");
 
 class AuthController {
   async getToken(req, res) {
-    try { console.log(req)
+    try {
       const body = {
         id: req.user._id,
         role: req.user.role,

@@ -12,7 +12,6 @@ mongoose
   .then(() => console.log("database connected"))
   .catch((e) => console.log(e));
 
-
 const user = require("./users.js");
 const movie = require("./movies.js");
 const review = require("./reviews.js");

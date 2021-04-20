@@ -9,8 +9,8 @@ class GenreController {
 
       //cek if data exist
       if (dataGenres.length == 0) {
-        res.status(400).json({ message: "No Data Found", data : null });
-      } else res.status(200).json({ message: "success", data: dataGenres });
+        return res.status(400).json({ message: "No Data Found", data : null });
+      } else return res.status(200).json({ message: "success", data: dataGenres });
 
     } catch (e) {
       console.log(e);
@@ -25,8 +25,8 @@ class GenreController {
 
       //cek if data exist
       if (dataGenres.length == 0) {
-        res.status(400).json({ message: "No Data Found", data : null});
-      } else res.status(200).json({ message: "success", data: dataGenres });
+        return res.status(400).json({ message: "No Data Found", data : null});
+      } else return res.status(200).json({ message: "success", data: dataGenres });
 
     } catch (e) {
       console.log(e);
@@ -45,8 +45,8 @@ class GenreController {
       let createGen = await genre.create(data);
 
       if (!createGen) {
-        res.status(400).json({ message: "Insert Failed", error : createGen});
-      } else res.status(200).json({ message: "success", data : createGen});
+        return res.status(400).json({ message: "Insert Failed", error : createGen});
+      } else return res.status(200).json({ message: "success", data : createGen});
 
     } catch (e) {
       console.log(e);
@@ -66,8 +66,8 @@ class GenreController {
       let updateGen = await genre.findOneAndUpdate({_id : req.params.id}, data , {new:true});
 
       if (!updateGen) {
-        res.status(400).json({ message: "Insert Failed", error : updateGen});
-      } else res.status(200).json({ message: "success", data : updateGen});
+        return res.status(400).json({ message: "Insert Failed", error : updateGen});
+      } else return res.status(200).json({ message: "success", data : updateGen});
 
     } catch (e) {
       console.log(e);
@@ -81,8 +81,8 @@ class GenreController {
       let deleteGen = await genre.deleteOne({ _id: req.params.id });
 
       if (!deleteGen.deletedCount) {
-        res.status(400).json({ message: "Delete Failed", error: deleteGen });
-      } else res.status(200).json({ message: "success", deletedCount : deleteGen.deletedCount });
+        return res.status(400).json({ message: "Delete Failed", error: deleteGen });
+      } else return res.status(200).json({ message: "success", deletedCount : deleteGen.deletedCount });
 
     } catch (e) {
       console.log(e);
