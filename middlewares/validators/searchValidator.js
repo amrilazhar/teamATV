@@ -8,7 +8,7 @@ class SearchValidator {
       let errors = [];
 
       // cek if params page is defined
-      if (req.query.page) {
+      if (Object.keys(req.query).includes('page')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.page)) {
           errors.push("page must be number");
@@ -16,7 +16,7 @@ class SearchValidator {
       } else req.query.page = 1;
 
       // cek if params limit is defined
-      if (req.query.limit) {
+      if (Object.keys(req.query).includes('limit')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.limit)) {
           errors.push("limit must be number");
@@ -24,7 +24,7 @@ class SearchValidator {
       } else req.query.limit = 10;
 
       // add filter status (released/upcoming) if the query params not null
-      if (req.query.status) {
+      if (Object.keys(req.query).includes('status')) {
         let status = req.query.status.toLowerCase();
         if (status !== "released" && status !== "upcoming") {
           errors.push("status unidentified");
@@ -32,24 +32,23 @@ class SearchValidator {
       }
 
       // add filter release_date if the query params not null
-      if (req.query.release_date) {
+      if (Object.keys(req.query).includes('release_date')) {
         let release = req.query.release_date.split(",");
-
         //if input end and start date not a year.
         if (release.length == 2) {
-          if (release[0].length !== 4 && release[1].length !== 4)
+          if (release[0].length !== 4 || release[1].length !== 4) {
             errors.push("date unidentified");
+          }
         } else {
-          if (release[0].length !== 4) errors.push("date unidentified");
+          if (release[0].length !== 4) { errors.push("date unidentified"); }
         }
       }
-
       // print error
       if (errors.length > 0) {
-        res.status(400).json({ message: "error", error: errors });
+        return res.status(400).json({ message: "error", error: errors });
       }
 
-      next();
+      return next();
     } catch (e) {
       console.log(e);
       res.status(500).json({ message: "Internal server error" });
@@ -61,7 +60,7 @@ class SearchValidator {
       let errors = [];
 
       // cek if params page is defined
-      if (req.query.page) {
+      if (Object.keys(req.query).includes('page')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.page)) {
           errors.push("page must be number");
@@ -69,7 +68,7 @@ class SearchValidator {
       } else req.query.page = 1;
 
       // cek if params limit is defined
-      if (req.query.limit) {
+      if (Object.keys(req.query).includes('limit')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.limit)) {
           errors.push("limit must be number");
@@ -78,10 +77,10 @@ class SearchValidator {
 
       // print error
       if (errors.length > 0) {
-        res.status(400).json({ message: "error", error: errors });
+        return res.status(400).json({ message: "error", error: errors });
       }
 
-      next();
+      return next();
     } catch (e) {
       console.log(e);
       res.status(500).json({ message: "Internal server error" });
@@ -93,7 +92,7 @@ class SearchValidator {
       let errors = [];
 
       // cek if params page is defined
-      if (req.query.page) {
+      if (Object.keys(req.query).includes('page')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.page)) {
           errors.push("page must be number");
@@ -101,7 +100,7 @@ class SearchValidator {
       } else req.query.page = 1;
 
       // cek if params limit is defined
-      if (req.query.limit) {
+      if (Object.keys(req.query).includes('limit')) {
         //cek if param page is number
         if (!validator.isNumeric(req.query.limit)) {
           errors.push("limit must be number");
@@ -109,18 +108,18 @@ class SearchValidator {
       } else req.query.limit = 10;
 
       // Check id_barang is valid or not
-      if (req.params.id_movie) {
+      if (Object.keys(req.params).includes('id_movie')) {
         if (!mongoose.Types.ObjectId.isValid(req.params.id_movie)) {
           errors.push("ID movie is not valid");
         }
-      } else errors.push("ID movie is not valid");
+      }
 
       // print error
       if (errors.length > 0) {
         return res.status(400).json({ message: "error", error: errors });
       }
 
-      next();
+      return next();
     } catch (e) {
       console.log(e);
       res.status(500).json({ message: "Internal server error" });
@@ -132,14 +131,14 @@ class SearchValidator {
       let errors = [];
 
       // Check id_barang is valid or not
-      if (req.params.id_movie) {
+      if (Object.keys(req.params).includes('id_movie')) {
         if (!mongoose.Types.ObjectId.isValid(req.params.id_movie)) {
           errors.push("ID movie is not valid");
         }
-      } else errors.push("ID movie is not valid");
+      }
 
       //cek if user exists
-      if (req.user) {
+      if (Object.keys(req).includes('user')) {
         if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
           errors.push("ID user is not valid");
         }
@@ -150,7 +149,7 @@ class SearchValidator {
         return res.status(400).json({ message: "error", error: errors });
       }
 
-      next();
+      return next();
     } catch (e) {
       console.log(e);
       res.status(500).json({ message: "Internal server error" });

@@ -16,7 +16,7 @@ class UserController {
       //     return res.status(500).json({ message: "Internal Server Error" });
       //   }
       // }
-      
+
 
       // View data user
       async myUserProfile(req, res) {
@@ -27,8 +27,8 @@ class UserController {
             console.log(e)
           return res.status(500).json({ message: "Internal Server Error" });
         }
-      } 
-    
+      }
+
       // Update data user
       async userUpdate(req, res) {
             try {
@@ -47,7 +47,7 @@ class UserController {
               return res.status(500).json({ message: "Internal Server Error" });
             }
           }
-      
+
       // view review of user
       async userGetReview(req, res) {
             try {
@@ -56,7 +56,7 @@ class UserController {
                 limit: req.query.limit ? req.query.limit : 10,
               };
               let dataReview = await review.paginate({ deleted: false, user_id : req.query.user_id }, options);
-        
+
               if (dataReview.totalDocs > 0) {
                 res.status(200).json({ message: "success", data: dataReview });
               } else {
@@ -72,7 +72,7 @@ class UserController {
      async getWatchList(req, res) {
         try {
           let dataWatchlist = await user.find({ _id : req.user.id})
-          .populate({ 
+          .populate({
             select: "poster title release_date genre",
             path: "movies"}).exec()
           let userWatchlist = dataWatchlist[0].watchlist;
@@ -84,16 +84,16 @@ class UserController {
             console.log(e)
           return res.status(500).json({ message: "Internal Server Error" });
         }
-      } 
+      }
 
-      //add watchlist 
+      //add watchlist
       async addWatchList(req, res) {
         try {
           let findUser = await user.findOne({  _id: req.user.id })
           findUser.watchlist.push(req.query.id_movie);
           let insertUser = await user.findOneAndUpdate(
                 {  _id: findUser._id },
-                findUser, { new: true } 
+                findUser, { new: true }
               );
           if (!insertUser) {
            return res.status(402).json({ message: "Data user can't be appeared" });
@@ -103,7 +103,7 @@ class UserController {
           return res.status(500).json({ message: "Internal Server Error" });
         }
       }
-    
+
       //delete watchlist
       async deleteWatchList(req, res) {
         try {
@@ -115,7 +115,7 @@ class UserController {
           findUser.watchlist.splice(indexOfIdMovie,1) }
           let deleteMovie = await user.findOneAndUpdate(
                 {  _id: findUser._id },
-                findUser, { new: true } 
+                findUser, { new: true }
               );
           if (!deleteMovie) {
             return res.status(402).json({ message: "Data user can't be appeared" })}
