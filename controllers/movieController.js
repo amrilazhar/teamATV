@@ -59,7 +59,7 @@ class MovieController {
       };
 
       let dataReview = await review.paginate(
-        { deleted: false, movie_id: req.params.id_movie },
+        { movie_id: req.params.id_movie },
         options
       );
 

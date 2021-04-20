@@ -14,7 +14,7 @@ describe("Movie List TEST", () => {
       //clean up the data first
       //clean user data
       await user.collection.dropIndexes();
-      await user.deleteMany();      
+      await user.deleteMany();
       await user.collection.createIndex( { email: 1 }, { unique : true } );
       //clean movie data
       await movie.deleteMany();
@@ -188,7 +188,7 @@ describe("Movie Details TEST", () => {
       //create dummy review for search
       let dummyReview = await review
         .create({
-          user_id: dummyUser._id,
+          user_id: tempIDUser,
           movie_id: tempIDMovie,
           rating: 5,
           review: "just so so",
