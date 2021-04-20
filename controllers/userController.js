@@ -15,8 +15,10 @@ class UserController {
       //       console.log(e)
       //     return res.status(500).json({ message: "Internal Server Error" });
       //   }
-      // } 
+      // }
+      
 
+      // View data user
       async myUserProfile(req, res) {
         try {
           let dataUser = await user.findOne({ _id: req.user.id})
@@ -33,9 +35,7 @@ class UserController {
               // Update data
               let dataUser = await user.findOneAndUpdate(
                 {  _id: req.params.id },
-                req.body, // This is all of req.body
-                { new: true } // new is to return the latest updated
-                // If no new, it will return the old data before updated
+                req.body, { new: true }
               );
               // If success
               if (!dataUser) {
@@ -47,7 +47,8 @@ class UserController {
               return res.status(500).json({ message: "Internal Server Error" });
             }
           }
-
+      
+      // view review of user
       async userGetReview(req, res) {
             try {
               const options = {
@@ -67,7 +68,7 @@ class UserController {
             }
           }
 
-
+    // view watchlist of user
      async getWatchList(req, res) {
         try {
           let dataWatchlist = await user.find({ _id : req.user.id});
@@ -82,15 +83,14 @@ class UserController {
         }
       } 
 
+      //add watchlist 
       async addWatchList(req, res) {
         try {
           let findUser = await user.findOne({  _id: req.user.id })
           findUser.watchlist.push(req.query.id_movie);
           let insertUser = await user.findOneAndUpdate(
                 {  _id: findUser._id },
-                findUser, // This is all of req.body
-                { new: true } // new is to return the latest updated
-                // If no new, it will return the old data before updated
+                findUser, { new: true } 
               );
           if (!insertUser) {
             res.status(402).json({ message: "Data user can't be appeared" });
@@ -101,10 +101,10 @@ class UserController {
         }
       }
     
+      //delete watchlist
       async deleteWatchList(req, res) {
         try {
           let findUser = await user.findOne({  _id: req.user.id }).exec();
-          // console.log(findUser)
           let indexOfIdMovie = findUser.watchlist.indexOf(req.query.id_movie)
           if(indexOfIdMovie < 0 ) {
             res.status(402).json({ message: "Movie has not been added at watchlist" })
@@ -112,9 +112,7 @@ class UserController {
           findUser.watchlist.splice(indexOfIdMovie,1) }
           let deleteMovie = await user.findOneAndUpdate(
                 {  _id: findUser._id },
-                findUser, // This is all of req.body
-                { new: true } // new is to return the latest updated
-                // If no new, it will return the old data before updated
+                findUser, { new: true } 
               );
           if (!deleteMovie) {
             res.status(402).json({ message: "Data user can't be appeared" })}
