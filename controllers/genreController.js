@@ -20,12 +20,12 @@ class GenreController {
 
   async getMain(req, res) {
     try {
-      let limit = req.query.limit ? req.query.limit : 5;
+      let limit = req.query.limit ? eval(req.query.limit) : 5;
       //get data genre
       let dataGenres = await genre
         .find({ deleted: false, isMain: true })
-        .limit(limit)
         .sort({ genre: 1 })
+        .limit(limit)
         .exec();
 
       //cek if data exist
