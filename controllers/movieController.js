@@ -202,7 +202,34 @@ class MovieController {
 
   async create(req, res) {
     try {
-      let data = await movie.create(req.body);
+      let genre = req.body.genre.split(",").map((item) => {
+        if (item !== null && item !== '') {
+          return item[0].toUpperCase() + item.slice(1).toLowerCase();
+        }
+      });
+      let characters = [];
+      for (let i = 0; i < req.character.images.length; i++) {
+        characters.push({
+          role_name: req.body.character_name[i],
+          photo: req.character.images[i],
+        });
+      };
+      let insertData = {
+        title: req.body.title,
+        director: req.body.director,
+        budget: req.body.budget,
+        release_date: req.body.release_date,
+        synopsis: req.body.synopsis,
+        genre: genre,
+        trailer: req.body.trailer,
+        isReleased: req.body.released == "released" ? true : false,
+        poster: req.body.poster,
+        backdrop: req.body.backdrop,
+        characters: characters,
+        updatedBy: req.user.id,
+      };
+      console.log(req.body);
+      let data = await movie.create(insertData);
 
       return res.status(201).json({
         message: "Success",
@@ -243,7 +270,9 @@ class MovieController {
 
   async delete(req, res) {
     try {
-      await movie.delete({ _id: req.params.id });
+      await movie.deleteOne({ _id: req.params.id });
+
+      await review.delete({ movie_id: req.params.id });
 
       return res.status(200).json({
         message: "Success",

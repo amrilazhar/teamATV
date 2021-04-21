@@ -8,11 +8,7 @@ exports.create = async (req, res, next) => {
     try {
         let errors = [];
 
-        if (!validator.isAlpha(req.body.title)) {
-            errors.push("Title should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.director)) {
+        if (!validator.isAlpha(validator.blacklist(req.body.director, " "))) {
             errors.push("Director should be alphabet");
         }
 
@@ -24,20 +20,8 @@ exports.create = async (req, res, next) => {
             errors.push("Date is consist of yyyy/mm/dd");
         }
 
-        if (!validator.isAlpha(req.body.synopsis)) {
-            errors.push("Synopsis should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.genre)) {
+        if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
             errors.push("Genre should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.trailer)) {
-            errors.push("Trailer should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.characters)) {
-            errors.push("Characters should be alphabet");
         }
 
         if (errors.length > 0) {
@@ -47,31 +31,94 @@ exports.create = async (req, res, next) => {
         }
 
         if (req.files) {
-            const file = req.files.image;
 
-            if (!file.mimetype.startsWith("image")) {
-                errors.push("File must be an image");
-            }
+            if (req.files.character_images) {
+                const file = req.files.character_images;
+                req.character = { images: [] };
+                for (let i = 0; i < file.length; i++) {
 
-            if (file.size > 1000000) {
-                errors.push("Image must be less than 1MB");
-            }
+                    if (!file[i].mimetype.startsWith("image")) {
+                        errors.push(`Image number ${i} must be an image`);
+                    }
 
-            let fileName = crypto.randomBytes(16).toString("hex");
+                    if (file[i].size > 3000000) {
+                        errors.push("Image must be less than 3MB");
+                    }
 
-            file.name = `${fileName}${path.parse(file.name).ext}`;
+                    let fileName = crypto.randomBytes(16).toString("hex");
 
-            req.body.poster = file.name;
+                    file[i].name = `${fileName}${path.parse(file[i].name).ext}`;
 
-            file.mv(`./public/images/${file.name}`, async (err) => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).json({
-                        message: "Internal Server Error",
-                        error: err.message,
+                    req.character.images.push(file[i].name)
+
+                    file[i].mv(`./public/images/cast` + `${file[i].name}`, function (err) {
+                        if (err) {
+                            console.log(err);
+
+                            return res.status(500).json({
+                                message: "Internal Server Error",
+                                error: err.message,
+                            });
+                        }
                     });
                 }
-            });
+            };
+
+            if (req.files.backdrop) {
+                const file = req.files.backdrop;
+
+                if (!file.mimetype.startsWith("image")) {
+                    errors.push("File must be an image");
+                }
+
+                if (file.size > 5000000) {
+                    errors.push("Image must be less than 5MB");
+                }
+
+                let fileName = crypto.randomBytes(16).toString("hex");
+
+                file.name = `${fileName}${path.parse(file.name).ext}`;
+
+                req.body.backdrop = file.name;
+
+                file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: err.message,
+                        });
+                    }
+                });
+            }
+
+            if (req.files.poster) {
+                const file = req.files.poster;
+
+                if (!file.mimetype.startsWith("image")) {
+                    errors.push("File must be an image");
+                }
+
+                if (file.size > 5000000) {
+                    errors.push("Image must be less than 5MB");
+                }
+
+                let fileName = crypto.randomBytes(16).toString("hex");
+
+                file.name = `${fileName}${path.parse(file.name).ext}`;
+
+                req.body.poster = file.name;
+
+                file.mv(`./public/images/poster/${file.name}`, async (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: err.message,
+                        });
+                    }
+                });
+            }
         }
 
         next();
@@ -93,11 +140,7 @@ exports.update = async (req, res, next) => {
             );
         }
 
-        if (!validator.isAlpha(req.body.title)) {
-            errors.push("Title should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.director)) {
+        if (!validator.isAlpha(validator.blacklist(req.body.director, " "))) {
             errors.push("Director should be alphabet");
         }
 
@@ -109,20 +152,8 @@ exports.update = async (req, res, next) => {
             errors.push("Date is consist of yyyy/mm/dd");
         }
 
-        if (!validator.isAlpha(req.body.synopsis)) {
-            errors.push("Synopsis should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.genre)) {
+        if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
             errors.push("Genre should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.trailer)) {
-            errors.push("Trailer should be alphabet");
-        }
-
-        if (!validator.isAlpha(req.body.characters)) {
-            errors.push("Characters should be alphabet");
         }
 
         if (errors.length > 0) {
@@ -132,32 +163,94 @@ exports.update = async (req, res, next) => {
         }
 
         if (req.files) {
-            const file = req.files.image;
 
-            if (!file.mimetype.startsWith("image")) {
-                errors.push("File must be an image");
-            }
+            if (req.files.character_images) {
+                const file = req.files.character_images;
+                req.character = { images: [] };
+                for (let i = 0; i < file.length; i++) {
 
-            if (file.size > 1000000) {
-                errors.push("Image must be less than 1MB");
-            }
+                    if (!file[i].mimetype.startsWith("image")) {
+                        errors.push(`Image number ${i} must be an image`);
+                    }
 
-            let fileName = crypto.randomBytes(16).toString("hex");
+                    if (file[i].size > 3000000) {
+                        errors.push("Image must be less than 3MB");
+                    }
 
-            file.name = `${fileName}${path.parse(file.name).ext}`;
+                    let fileName = crypto.randomBytes(16).toString("hex");
 
-            req.body.poster = file.name;
+                    file[i].name = `${fileName}${path.parse(file[i].name).ext}`;
 
-            file.mv(`./public/images/${file.name}`, async (err) => {
-                if (err) {
-                    console.log(err);
+                    req.character.images.push(file[i].name)
 
-                    return res.status(500).json({
-                        message: "Internal Server Error",
-                        error: err.message,
+                    file[i].mv(`./public/images/cast` + `${file[i].name}`, function (err) {
+                        if (err) {
+                            console.log(err);
+
+                            return res.status(500).json({
+                                message: "Internal Server Error",
+                                error: err.message,
+                            });
+                        }
                     });
                 }
-            });
+            };
+
+            if (req.files.backdrop) {
+                const file = req.files.backdrop;
+
+                if (!file.mimetype.startsWith("image")) {
+                    errors.push("File must be an image");
+                }
+
+                if (file.size > 5000000) {
+                    errors.push("Image must be less than 5MB");
+                }
+
+                let fileName = crypto.randomBytes(16).toString("hex");
+
+                file.name = `${fileName}${path.parse(file.name).ext}`;
+
+                req.body.backdrop = file.name;
+
+                file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: err.message,
+                        });
+                    }
+                });
+            }
+
+            if (req.files.poster) {
+                const file = req.files.poster;
+
+                if (!file.mimetype.startsWith("image")) {
+                    errors.push("File must be an image");
+                }
+
+                if (file.size > 5000000) {
+                    errors.push("Image must be less than 5MB");
+                }
+
+                let fileName = crypto.randomBytes(16).toString("hex");
+
+                file.name = `${fileName}${path.parse(file.name).ext}`;
+
+                req.body.poster = file.name;
+
+                file.mv(`./public/images/poster/${file.name}`, async (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: err.message,
+                        });
+                    }
+                });
+            }
         }
 
         next();
