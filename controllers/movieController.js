@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
-const { user, review, movie, person } = require("../models");
+const { user, review, movie } = require("../models");
 
 class MovieController {
   async fetch(req, res) {
-    
+
   }
   async detail(req, res) {
     try {
