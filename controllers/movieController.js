@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie, person } = require("../models");
 
 class MovieController {
+  async fetch(req, res) {
+    
+  }
   async detail(req, res) {
     try {
       //get movie detail info
