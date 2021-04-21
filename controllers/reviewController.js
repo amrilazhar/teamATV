@@ -77,7 +77,6 @@ class ReviewController {
 
   async delete(req, res) {
     try {
-      req.body.user_id = req.user.id;
       const singleReview = await review.findById(req.params.id);
 
       if (singleReview.user_id.toString() !== req.user.id && req.user.id) {
@@ -86,11 +85,11 @@ class ReviewController {
         });
       }
       // delete data depends on req.params.id
-      let data = await review.remove();
+      let data = await review.deleteOne({_id: req.params.id}).exec();
 
       // If success
       return res.status(200).json({
-        message: "Success to delete transaksi",
+        message: "Success to delete review",
       });
     } catch (e) {
       // If failed

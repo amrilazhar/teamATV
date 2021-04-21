@@ -55,6 +55,7 @@ class UserController {
                 page: req.query.page ? req.query.page : 1,
                 limit: req.query.limit ? req.query.limit : 10,
               };
+
               let dataReview = await review.paginate({ deleted: false, user_id : req.query.user_id }, options);
 
               if (dataReview.totalDocs > 0) {
@@ -73,9 +74,10 @@ class UserController {
         try {
           let dataWatchlist = await user.find({ _id : req.user.id})
           .populate({
+            path: "watchlist",
             select: "poster title release_date genre",
-            path: "movies"}).exec()
-          let userWatchlist = dataWatchlist[0].watchlist;
+            }).exec()
+          let userWatchlist = dataWatchlist[0].watchlist.length;
           if (userWatchlist == 0) {
             return res.status(404).json({ message: "Watchlist is empty" });
           } else {
