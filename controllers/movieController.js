@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie } = require("../models");
 
 class MovieController {
-  async fetch(req, res) {
-
-  }
+  async fetch(req, res) {}
   async detail(req, res) {
     try {
       //get movie detail info
@@ -53,12 +51,20 @@ class MovieController {
 
   async getReview(req, res) {
     try {
+      //cek paginate status
+      let paginateStatus = true;
+      if (req.query.pagination) {
+        if (req.query.pagination == "false") {
+          paginateStatus = false;
+        }
+      }
       const options = {
         select: "title rating review updated_at",
         sort: { release_date: -1 },
         populate: { path: "user_id", select: "name profile_picture" },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
+        pagination: paginateStatus,
       };
 
       let dataReview = await review.paginate(
