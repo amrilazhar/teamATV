@@ -23,14 +23,16 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: "user",
     },
-    watchlist : [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "movies",
-    }],
+    watchlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "movies",
+      },
+    ],
     profile_picture: {
       type: String,
       required: false,
-      get : getProfileImage,
+      get: getProfileImage,
       default: "profile.jpg",
     },
   },
@@ -47,11 +49,15 @@ function getProfileImage(image) {
   if (image[0] !== "/") {
     image = "/" + image;
   }
-  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/profile${image}` : `/images/profile${image}`;
+  return process.env.PUBLIC_URL
+    ? process.env.PUBLIC_URL + `/images/profile${image}`
+    : `/images/profile${image}`;
+}
 
 function encryptPwd(password) {
   return bcrypt.hashSync(password, 10);
 }
+
 UserSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 module.exports = mongoose.model("user", UserSchema, "user");
