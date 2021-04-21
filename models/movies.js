@@ -118,6 +118,6 @@ function getImageCharacters(data) {
 }
 
 MovieSchema.plugin(mongoosePaginate);
-//MovieSchema.plugin(mongoose_delete, { overrideMethods: "all" });
+MovieSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 module.exports = mongoose.model("movies", MovieSchema, "movies");
