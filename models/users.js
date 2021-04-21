@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema(
     profile_picture: {
       type: String,
       required: false,
-      get : getImage,
+      get : getProfileImage,
       default: "profile.jpg",
     },
   },
@@ -39,12 +39,15 @@ const UserSchema = new mongoose.Schema(
       createdAt: "created_at",
       updatedAt: "updated_at",
     },
+    toJSON: { getters: true },
   }
 );
 
-function getImage(image) {
-  return image && `/images/${image}`;
-}
+function getProfileImage(image) {
+  if (image[0] !== "/") {
+    image = "/" + image;
+  }
+  return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/profile${image}` : `/images/profile${image}`;
 
 function encryptPwd(password) {
   return bcrypt.hashSync(password, 10);

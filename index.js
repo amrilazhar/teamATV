@@ -29,6 +29,22 @@ app.use(fileUpload());
 //set static assets to public directory
 app.use(express.static("public"));
 
+// ==========================  View ========================== //
+app.engine('page', function (filePath, options, callback) { // define the template engine
+  fs.readFile(filePath, function (err, content) {
+    if (err) return callback(err)
+    // this is an extremely simple template engine
+    var rendered = content.toString()
+      .replace('#title#', '<title>' + options.title + '</title>')
+      .replace('#message#', '<h1>' + options.message + '</h1>')
+    return callback(null, rendered)
+  })
+})
+app.set('views', './views') // specify the views directory
+app.set('view engine', 'page') // register the template engine
+
+// ========================= View ============================ //
+
 // ROUTES DECLARATION & IMPORT
 const authRoutes = require("./routes/authRoute.js");
 app.use("/auth", authRoutes);
@@ -41,9 +57,6 @@ app.use("/review", reviewRoutes);
 
 const userRoutes = require("./routes/userRoute.js");
 app.use("/user", userRoutes);
-
-const personRoutes = require("./routes/personRoute.js");
-app.use("/person", personRoutes);
 
 const genreRoutes = require("./routes/genreRoute.js");
 app.use("/genre", genreRoutes);
@@ -91,7 +104,6 @@ if (process.env.NODE_ENV === "dev") {
   app.use(morgan("combined", { stream: accessLogStream }));
 }
 //======================== end security code ==============================//
-
 
 if (process.env.NODE_ENV !== "test") {
   let PORT = 3000;
