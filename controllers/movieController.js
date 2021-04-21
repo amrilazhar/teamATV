@@ -54,7 +54,7 @@ class MovieController {
   async getReview(req, res) {
     try {
       const options = {
-        select: "rating review updated_at",
+        select: "title rating review updated_at",
         sort: { release_date: -1 },
         populate: { path: "user_id", select: "name profile_picture" },
         page: req.query.page ? req.query.page : 1,
