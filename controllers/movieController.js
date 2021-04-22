@@ -203,7 +203,7 @@ class MovieController {
   async create(req, res) {
     try {
       let genre;
-      if (typeof req.body.genre.split == 'string') {
+      if (typeof req.body.genre == 'string') {
         genre = req.body.genre.split(",").map((item) => {
           if (item !== null && item !== '') {
             return item[0].toUpperCase() + item.slice(1).toLowerCase();
@@ -228,7 +228,7 @@ class MovieController {
           photo: req.character.images[i],
         });
       };
-      console.log(req.character.images.length);
+
       let insertData = {
         title: req.body.title,
         director: req.body.director,
@@ -261,11 +261,53 @@ class MovieController {
 
   async update(req, res) {
     try {
+      let genre;
+      if (typeof req.body.genre == 'string') {
+        genre = req.body.genre.split(",").map((item) => {
+          if (item !== null && item !== '') {
+            return item[0].toUpperCase() + item.slice(1).toLowerCase();
+          }
+        });
+      } else {
+        genre = req.body.genre.map((item) => {
+          if (item !== null && item !== '') {
+            return item[0].toUpperCase() + item.slice(1).toLowerCase();
+          }
+        });
+      }
+
+      let characters = [];
+      if (typeof req.body.character_name == 'string') {
+        req.body.character_name = [ req.body.character_name ];
+      }
+
+      for (let i = 0; i < req.character.images.length; i++) {
+        characters.push({
+          role_name: req.body.character_name[i],
+          photo: req.character.images[i],
+        });
+      };
+
+      let insertData = {
+        title: req.body.title,
+        director: req.body.director,
+        budget: req.body.budget,
+        release_date: new Date(req.body.release_date),
+        synopsis: req.body.synopsis,
+        genre: genre,
+        trailer: req.body.trailer,
+        isReleased: req.body.released == "released" ? true : false,
+        poster: req.body.poster,
+        backdrop: req.body.backdrop,
+        characters: characters,
+        updatedBy: req.user.id,
+      };
+
       let data = await movie.findOneAndUpdate(
         {
           _id: req.params.id,
         },
-        req.body,
+        insertData,
         {
           new: true,
         }

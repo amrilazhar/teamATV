@@ -40,11 +40,15 @@ exports.create = async (req, res, next) => {
         req.character = { images: [] };
         for (let i = 0; i < file.length; i++) {
           if (!file[i].mimetype.startsWith("image")) {
-            errors.push(`Image number ${i} must be an image`);
+            return res.status(400).json({
+              message: "file must be an image",
+            });
           }
 
           if (file[i].size > 3000000) {
-            errors.push("Image must be less than 3MB");
+            return res.status(400).json({
+              message: "file size larger than 3MB",
+            });
           }
 
           let fileName = crypto.randomBytes(16).toString("hex");
@@ -68,13 +72,16 @@ exports.create = async (req, res, next) => {
 
       if (req.files.backdrop) {
         const file = req.files.backdrop;
-
         if (!file.mimetype.startsWith("image")) {
-          errors.push("File must be an image");
+          return res.status(400).json({
+            message: "file must be an image",
+          });
         }
 
         if (file.size > 5000000) {
-          errors.push("Image must be less than 5MB");
+          return res.status(400).json({
+            message: "file size larger than 5MB",
+          });
         }
 
         let fileName = crypto.randomBytes(16).toString("hex");
@@ -98,11 +105,15 @@ exports.create = async (req, res, next) => {
         const file = req.files.poster;
 
         if (!file.mimetype.startsWith("image")) {
-          errors.push("File must be an image");
+          return res.status(400).json({
+            message: "file must be an image",
+          });
         }
 
         if (file.size > 5000000) {
-          errors.push("Image must be less than 5MB");
+          return res.status(400).json({
+            message: "file size larger than 5MB",
+          });
         }
 
         let fileName = crypto.randomBytes(16).toString("hex");
@@ -121,6 +132,12 @@ exports.create = async (req, res, next) => {
           }
         });
       }
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        message: errors.join(", "),
+      });
     }
 
     next();
@@ -167,14 +184,23 @@ exports.update = async (req, res, next) => {
     if (req.files) {
       if (req.files.character_images) {
         const file = req.files.character_images;
+        // cek apakah array
+        if (!req.files.character_images.length) {
+          req.files.character_images = [ req.files.character_images ];
+        }
+
         req.character = { images: [] };
         for (let i = 0; i < file.length; i++) {
           if (!file[i].mimetype.startsWith("image")) {
-            errors.push(`Image number ${i} must be an image`);
+            return res.status(400).json({
+              message: "file must be an image",
+            });
           }
 
           if (file[i].size > 3000000) {
-            errors.push("Image must be less than 3MB");
+            return res.status(400).json({
+              message: "file size larger than 3MB",
+            });
           }
 
           let fileName = crypto.randomBytes(16).toString("hex");
@@ -202,11 +228,15 @@ exports.update = async (req, res, next) => {
         const file = req.files.backdrop;
 
         if (!file.mimetype.startsWith("image")) {
-          errors.push("File must be an image");
+          return res.status(400).json({
+            message: "file must be an image",
+          });
         }
 
         if (file.size > 5000000) {
-          errors.push("Image must be less than 5MB");
+          return res.status(400).json({
+            message: "file size larger than 5MB",
+          });
         }
 
         let fileName = crypto.randomBytes(16).toString("hex");
@@ -230,11 +260,15 @@ exports.update = async (req, res, next) => {
         const file = req.files.poster;
 
         if (!file.mimetype.startsWith("image")) {
-          errors.push("File must be an image");
+          return res.status(400).json({
+            message: "file must be an image",
+          });
         }
 
         if (file.size > 5000000) {
-          errors.push("Image must be less than 5MB");
+          return res.status(400).json({
+            message: "file size larger than 5MB",
+          });
         }
 
         let fileName = crypto.randomBytes(16).toString("hex");
@@ -254,7 +288,6 @@ exports.update = async (req, res, next) => {
         });
       }
     }
-
     next();
   } catch (e) {
     return res.status(500).json({
