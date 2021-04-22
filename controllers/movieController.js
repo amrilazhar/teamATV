@@ -202,11 +202,20 @@ class MovieController {
 
   async create(req, res) {
     try {
-      let genre = req.body.genre.split(",").map((item) => {
-        if (item !== null && item !== '') {
-          return item[0].toUpperCase() + item.slice(1).toLowerCase();
-        }
-      });
+      let genre;
+      if (typeof req.body.genre.split == 'string') {
+        genre = req.body.genre.split(",").map((item) => {
+          if (item !== null && item !== '') {
+            return item[0].toUpperCase() + item.slice(1).toLowerCase();
+          }
+        });
+      } else {
+        genre = req.body.genre.map((item) => {
+          if (item !== null && item !== '') {
+            return item[0].toUpperCase() + item.slice(1).toLowerCase();
+          }
+        });
+      }
 
       let characters = [];
       if (typeof req.body.character_name == 'string') {
