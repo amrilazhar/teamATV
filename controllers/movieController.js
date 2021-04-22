@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie } = require("../models");
 
 class MovieController {
-  async fetch(req, res) {}
+  async fetch(req, res) { }
   async detail(req, res) {
     try {
       //get movie detail info
@@ -208,6 +208,9 @@ class MovieController {
         }
       });
       let characters = [];
+      if (typeof req.body.character_name == 'string') {
+        req.body.character_name - [req.body.character_name];
+      }
       for (let i = 0; i < req.character.images.length; i++) {
         characters.push({
           role_name: req.body.character_name[i],
@@ -218,7 +221,7 @@ class MovieController {
         title: req.body.title,
         director: req.body.director,
         budget: req.body.budget,
-        release_date: req.body.release_date,
+        release_date: new Date(req.body.release_date),
         synopsis: req.body.synopsis,
         genre: genre,
         trailer: req.body.trailer,

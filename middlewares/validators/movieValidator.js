@@ -31,8 +31,11 @@ exports.create = async (req, res, next) => {
         }
 
         if (req.files) {
-
             if (req.files.character_images) {
+
+                if (req.files.character_images.length) {
+                    req.files.character_images - [req.files.character_images];
+                }
                 const file = req.files.character_images;
                 req.character = { images: [] };
                 for (let i = 0; i < file.length; i++) {
@@ -62,64 +65,65 @@ exports.create = async (req, res, next) => {
                         }
                     });
                 }
-            };
-
-            if (req.files.backdrop) {
-                const file = req.files.backdrop;
-
-                if (!file.mimetype.startsWith("image")) {
-                    errors.push("File must be an image");
-                }
-
-                if (file.size > 5000000) {
-                    errors.push("Image must be less than 5MB");
-                }
-
-                let fileName = crypto.randomBytes(16).toString("hex");
-
-                file.name = `${fileName}${path.parse(file.name).ext}`;
-
-                req.body.backdrop = file.name;
-
-                file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
-                    if (err) {
-                        console.log(err);
-                        return res.status(500).json({
-                            message: "Internal Server Error",
-                            error: err.message,
-                        });
-                    }
-                });
-            }
-
-            if (req.files.poster) {
-                const file = req.files.poster;
-
-                if (!file.mimetype.startsWith("image")) {
-                    errors.push("File must be an image");
-                }
-
-                if (file.size > 5000000) {
-                    errors.push("Image must be less than 5MB");
-                }
-
-                let fileName = crypto.randomBytes(16).toString("hex");
-
-                file.name = `${fileName}${path.parse(file.name).ext}`;
-
-                req.body.poster = file.name;
-
-                file.mv(`./public/images/poster/${file.name}`, async (err) => {
-                    if (err) {
-                        console.log(err);
-                        return res.status(500).json({
-                            message: "Internal Server Error",
-                            error: err.message,
-                        });
-                    }
-                });
             }
         }
+
+        if (req.files.backdrop) {
+            const file = req.files.backdrop;
+
+            if (!file.mimetype.startsWith("image")) {
+                errors.push("File must be an image");
+            }
+
+            if (file.size > 5000000) {
+                errors.push("Image must be less than 5MB");
+            }
+
+            let fileName = crypto.randomBytes(16).toString("hex");
+
+            file.name = `${fileName}${path.parse(file.name).ext}`;
+
+            req.body.backdrop = file.name;
+
+            file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: err.message,
+                    });
+                }
+            });
+        }
+
+        if (req.files.poster) {
+            const file = req.files.poster;
+
+            if (!file.mimetype.startsWith("image")) {
+                errors.push("File must be an image");
+            }
+
+            if (file.size > 5000000) {
+                errors.push("Image must be less than 5MB");
+            }
+
+            let fileName = crypto.randomBytes(16).toString("hex");
+
+            file.name = `${fileName}${path.parse(file.name).ext}`;
+
+            req.body.poster = file.name;
+
+            file.mv(`./public/images/poster/${file.name}`, async (err) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: err.message,
+                    });
+                }
+            });
+        }
+
 
         next();
     } catch (e) {
@@ -163,8 +167,11 @@ exports.update = async (req, res, next) => {
         }
 
         if (req.files) {
-
             if (req.files.character_images) {
+
+                if (req.files.character_images.length) {
+                    req.files.character_images - [req.files.character_images];
+                }
                 const file = req.files.character_images;
                 req.character = { images: [] };
                 for (let i = 0; i < file.length; i++) {
@@ -194,63 +201,63 @@ exports.update = async (req, res, next) => {
                         }
                     });
                 }
-            };
+            }
+        }
 
-            if (req.files.backdrop) {
-                const file = req.files.backdrop;
+        if (req.files.backdrop) {
+            const file = req.files.backdrop;
 
-                if (!file.mimetype.startsWith("image")) {
-                    errors.push("File must be an image");
-                }
-
-                if (file.size > 5000000) {
-                    errors.push("Image must be less than 5MB");
-                }
-
-                let fileName = crypto.randomBytes(16).toString("hex");
-
-                file.name = `${fileName}${path.parse(file.name).ext}`;
-
-                req.body.backdrop = file.name;
-
-                file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
-                    if (err) {
-                        console.log(err);
-                        return res.status(500).json({
-                            message: "Internal Server Error",
-                            error: err.message,
-                        });
-                    }
-                });
+            if (!file.mimetype.startsWith("image")) {
+                errors.push("File must be an image");
             }
 
-            if (req.files.poster) {
-                const file = req.files.poster;
-
-                if (!file.mimetype.startsWith("image")) {
-                    errors.push("File must be an image");
-                }
-
-                if (file.size > 5000000) {
-                    errors.push("Image must be less than 5MB");
-                }
-
-                let fileName = crypto.randomBytes(16).toString("hex");
-
-                file.name = `${fileName}${path.parse(file.name).ext}`;
-
-                req.body.poster = file.name;
-
-                file.mv(`./public/images/poster/${file.name}`, async (err) => {
-                    if (err) {
-                        console.log(err);
-                        return res.status(500).json({
-                            message: "Internal Server Error",
-                            error: err.message,
-                        });
-                    }
-                });
+            if (file.size > 5000000) {
+                errors.push("Image must be less than 5MB");
             }
+
+            let fileName = crypto.randomBytes(16).toString("hex");
+
+            file.name = `${fileName}${path.parse(file.name).ext}`;
+
+            req.body.backdrop = file.name;
+
+            file.mv(`./public/images/backdrop/${file.name}`, async (err) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: err.message,
+                    });
+                }
+            });
+        }
+
+        if (req.files.poster) {
+            const file = req.files.poster;
+
+            if (!file.mimetype.startsWith("image")) {
+                errors.push("File must be an image");
+            }
+
+            if (file.size > 5000000) {
+                errors.push("Image must be less than 5MB");
+            }
+
+            let fileName = crypto.randomBytes(16).toString("hex");
+
+            file.name = `${fileName}${path.parse(file.name).ext}`;
+
+            req.body.poster = file.name;
+
+            file.mv(`./public/images/poster/${file.name}`, async (err) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: err.message,
+                    });
+                }
+            });
         }
 
         next();
