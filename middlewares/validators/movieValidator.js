@@ -154,9 +154,15 @@ exports.update = async (req, res, next) => {
     let errors = [];
 
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      errors.push(
-        "id_movie is not valid and must be 24 characters & hexadecimal"
-      );
+      return res.status(400).json({
+        message: "id_movie is not valid and must be 24 characters & hexadecimal",
+      });
+    }
+
+    let data = await movie.findOne({ _id: req.params.id });
+
+    if (!data) {
+      errors.push("Movie not found");
     }
 
     if (!validator.isAlpha(validator.blacklist(req.body.director, " "))) {
@@ -290,6 +296,7 @@ exports.update = async (req, res, next) => {
     }
     next();
   } catch (e) {
+    console.log(e);
     return res.status(500).json({
       message: "Internal Server Error",
       error: e.message,

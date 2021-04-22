@@ -238,11 +238,18 @@ class MovieController {
         genre: genre,
         trailer: req.body.trailer,
         isReleased: req.body.released == "released" ? true : false,
-        poster: req.body.poster,
-        backdrop: req.body.backdrop,
-        characters: characters,
         updatedBy: req.user.id,
       };
+
+      if (req.body.poster) {
+        insertData.poster = req.body.poster;
+      }
+      if (req.body.backdrop) {
+        insertData.backdrop = req.body.backdrop;
+      }
+      if (characters.length > 0) {
+        insertData.characters = characters;
+      }
 
       let data = await movie.create(insertData);
 
@@ -297,11 +304,18 @@ class MovieController {
         genre: genre,
         trailer: req.body.trailer,
         isReleased: req.body.released == "released" ? true : false,
-        poster: req.body.poster,
-        backdrop: req.body.backdrop,
-        characters: characters,
         updatedBy: req.user.id,
       };
+
+      if (req.body.poster) {
+        insertData.poster = req.body.poster;
+      }
+      if (req.body.backdrop) {
+        insertData.backdrop = req.body.backdrop;
+      }
+      if (characters.length > 0) {
+        insertData.characters = characters;
+      }
 
       let data = await movie.findOneAndUpdate(
         {
@@ -315,12 +329,13 @@ class MovieController {
 
       return res.status(201).json({
         message: "Success",
-        data,
+        data:data,
       });
     } catch (e) {
+      console.log(e);
       return res.status(500).json({
         message: "Internal Server Error",
-        error: e,
+        error: e.message,
       });
     }
   }
@@ -335,9 +350,10 @@ class MovieController {
         message: "Success",
       });
     } catch (e) {
+      console.log(e);
       return res.status(500).json({
         message: "Internal Server Error",
-        error: e,
+        error: e.message,
       });
     }
   }

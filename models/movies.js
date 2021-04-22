@@ -50,7 +50,7 @@ const MovieSchema = new mongoose.Schema(
     backdrop: {
       type: String,
       required: false,
-      default:"defaultBackdrop.jpg",
+      default: "defaultBackdrop.jpg",
       get : getImageBackdrop,
     },
     characters: {
