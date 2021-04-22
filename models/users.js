@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
       get: getProfileImage,
-      default: "profile.jpg",
+      default: "defaultProfile.png",
     },
   },
   {
