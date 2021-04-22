@@ -207,18 +207,24 @@ class MovieController {
           return item[0].toUpperCase() + item.slice(1).toLowerCase();
         }
       });
+
       let characters = [];
+      if (typeof req.body.character_name == 'string') {
+        req.body.character_name = [ req.body.character_name ];
+      }
+
       for (let i = 0; i < req.character.images.length; i++) {
         characters.push({
           role_name: req.body.character_name[i],
           photo: req.character.images[i],
         });
       };
+      console.log(req.character.images.length);
       let insertData = {
         title: req.body.title,
         director: req.body.director,
         budget: req.body.budget,
-        release_date: req.body.release_date,
+        release_date: new Date(req.body.release_date),
         synopsis: req.body.synopsis,
         genre: genre,
         trailer: req.body.trailer,
@@ -228,7 +234,7 @@ class MovieController {
         characters: characters,
         updatedBy: req.user.id,
       };
-      console.log(req.body);
+
       let data = await movie.create(insertData);
 
       return res.status(201).json({
