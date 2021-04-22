@@ -2,6 +2,38 @@ const jwt = require("jsonwebtoken");
 const { user, review, movie } = require("../models");
 
 class ReviewController {
+  async getOne(req, res) {
+    try {
+      req.body.user_id = req.user.id;
+      const singleReview = await review.findById(req.params.id).populate('movie_id', 'title poster');
+
+      // if barang not found
+      if (!singleReview) {
+        return res.status(400).json({
+          message: `review not found`,
+        });
+      }
+
+      if (singleReview.user_id.toString() !== req.user.id && req.user.id) {
+        return res.status(400).json({
+          message: `you are not the owner of this review`,
+        });
+      }
+
+      // If success
+      return res.status(200).json({
+        message: "Success",
+        data: singleReview,
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: e.message,
+      });
+    }
+  }
+
   async create(req, res) {
     try {
       req.body.user_id = req.user.id;
@@ -14,7 +46,11 @@ class ReviewController {
         data,
       });
     } catch (e) {
-      if (e.code == 11000 && e.keyPattern.movie_id == 1 && e.keyPattern.user_id == 1 ) {
+      if (
+        e.code == 11000 &&
+        e.keyPattern.movie_id == 1 &&
+        e.keyPattern.user_id == 1
+      ) {
         //console.log(e);
         return res.status(400).json({
           message: "Error",
@@ -59,7 +95,11 @@ class ReviewController {
         data,
       });
     } catch (e) {
-      if (e.code == 11000 && e.keyPattern.movie_id == 1 && e.keyPattern.user_id == 1 ) {
+      if (
+        e.code == 11000 &&
+        e.keyPattern.movie_id == 1 &&
+        e.keyPattern.user_id == 1
+      ) {
         console.log(e);
         return res.status(400).json({
           message: "Error",
@@ -85,7 +125,7 @@ class ReviewController {
         });
       }
       // delete data depends on req.params.id
-      let data = await review.deleteOne({_id: req.params.id}).exec();
+      let data = await review.deleteOne({ _id: req.params.id }).exec();
 
       // If success
       return res.status(200).json({

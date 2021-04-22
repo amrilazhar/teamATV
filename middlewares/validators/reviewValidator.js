@@ -166,3 +166,31 @@ exports.delete = async (req, res, next) => {
         });
     }
 };
+
+exports.get = async (req, res, next) => {
+    try {
+        let errors = [];
+
+        // Check parameter id is valid or not
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            errors.push(
+                "id_review is not valid and must be 24 character & hexadecimal"
+            );
+        }
+
+        // If the parameters is not valid it will go here
+        if (errors.length > 0) {
+            return res.status(400).json({
+                message: errors.join(", "),
+            });
+        }
+
+        // Go to next
+        next();
+    } catch (e) {
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: e.message,
+        });
+    }
+}
