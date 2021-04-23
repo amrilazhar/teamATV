@@ -1,6 +1,6 @@
 const validator = require("validator");
 const mongoose = require("mongoose");
-const { user, review, movie, person } = require("../../models");
+const { user, review, movie } = require("../../models");
 
 class SearchValidator {
   async search(req,res,next) {

@@ -1,15 +1,15 @@
 const validator = require("validator");
 const mongoose = require("mongoose");
-const { user, review, movie, person } = require("../../models");
-
+const { user, review, movie } = require("../../models");
 
 class UserValidator {
   async validate(req, res, next) {
     try {
-      let act = req.route.path.substring(1);
+      let act = req.route.path.substring(1).replace('/:id', '');
       let errors = [];
-
-      if (act === "signup" || act === "userUpdate" ) {
+      console.log("masuk validate");
+      console.log(act, " =====Act");
+      if (act === "signup" || act === "userUpdate") {
         if (!validator.isAlpha(validator.blacklist(req.body.name, " "))) {
           errors.push("Name must be alphabet");
         }
@@ -30,7 +30,9 @@ class UserValidator {
             pointsForContainingSymbol: 10,
           })
         ) {
-          errors.push("password must have minimum length 8, minimum 1 lowercase character, minimum 1 uppercase character, minimum 1 numbers, and minimum 1 symbols");
+          errors.push(
+            "password must have minimum length 8, minimum 1 lowercase character, minimum 1 uppercase character, minimum 1 numbers, and minimum 1 symbols"
+          );
         }
 
         if (req.body.confirmPassword !== req.body.password) {
@@ -46,12 +48,13 @@ class UserValidator {
         return res.status(400).json({
           message: errors.join(", "),
         });
+      } else {
+        next();
       }
-      next();
     } catch (e) {
       console.log(e);
       return res.status(500).json({
-        message : "internal server error",
+        message: "internal server error",
         error: e,
       });
     }
@@ -60,58 +63,69 @@ class UserValidator {
   async validateAddWatchList(req, res, next) {
     try {
       let act = req.route.path.substring(1);
-      let errors = []
+      let errors = [];
 
-      if (act === "addWatchList" ) {
-      let findUser = await user.findOne({  _id: req.user.id }).exec();
-      if(!findUser) {errors.push( " user id is not found ")} else {
-        if (findUser.watchlist.includes( req.query.id_movie )) { errors.push( " id movie has been added " )}
+      if (act === "addWatchList") {
+        let findUser = await user.findOne({ _id: req.user.id }).exec();
+        if (!findUser) {
+          errors.push(" user id is not found ");
+        } else {
+          if (findUser.watchlist.includes(req.query.id_movie)) {
+            errors.push(" id movie has been added ");
+          }
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(req.query.id_movie)) {
+          errors.push(
+            "id movie is invalid and must be 24 characters & hexadecimal"
+          );
+        }
       }
 
-      if (!mongoose.Types.ObjectId.isValid(( req.query.id_movie ))) {
-        errors.push(
-            "id movie is invalid and must be 24 characters & hexadecimal");
-      }}
-
       if (errors.length > 0) {
-      return res.status(400).json({
-      message: errors.join(", "),
-      });
+        return res.status(400).json({
+          message: errors.join(", "),
+        });
       }
       next();
     } catch (e) {
       return res.status(500).json({
-      message: "Internal Server Error",
-      error: e.message,
-  });
-}}
+        message: "Internal Server Error",
+        error: e.message,
+      });
+    }
+  }
 
   async validateDeleteWatchList(req, res, next) {
     try {
       let act = req.route.path.substring(1);
-      let errors = []
+      let errors = [];
 
-      if (act === "deleteWatchList" ) {
-      let findUser = await user.findOne({  _id: req.user.id }).exec();
-      if(!findUser) {errors.push( " user id is not found ")} 
-      
-      if (!mongoose.Types.ObjectId.isValid(( req.query.id_movie ))) {
-        errors.push(
-            "id movie is invalid and must be 24 characters & hexadecimal");
-      }}
+      if (act === "deleteWatchList") {
+        let findUser = await user.findOne({ _id: req.user.id }).exec();
+        if (!findUser) {
+          errors.push(" user id is not found ");
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(req.query.id_movie)) {
+          errors.push(
+            "id movie is invalid and must be 24 characters & hexadecimal"
+          );
+        }
+      }
 
       if (errors.length > 0) {
-      return res.status(400).json({
-      message: errors.join(", "),
-      });
+        return res.status(400).json({
+          message: errors.join(", "),
+        });
       }
       next();
     } catch (e) {
       return res.status(500).json({
-      message: "Internal Server Error",
-      error: e.message,
-  });
-}}
-
+        message: "Internal Server Error",
+        error: e.message,
+      });
+    }
+  }
 }
 module.exports = new UserValidator();

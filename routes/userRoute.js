@@ -14,8 +14,8 @@ const userUpload = require("../middlewares/uploads/userUpload");
 
 //Create your Router Here
 // router.get("/userProfile/:id", isUserOrGlobal , userController.userProfile); //view all user profile (if global want to view our profile)
+router.put("/userUpdate/:id", userValidator.validate, isUser, userUpload, userController.userUpdate); //Update profile
 router.get("/myUserProfile", isUser, userController.myUserProfile); //view my user profile
-router.put("/userUpdate/:id", isUser, userValidator.validate, userUpload, userController.userUpdate); //Update profile
 router.get("/userGetReview", isUser, userController.userGetReview); //get review
 router.get("/getWatchlist",isUser, userController.getWatchList) //get watchlist
 router.put("/addWatchList", isUser, userValidator.validateAddWatchList, userController.addWatchList) //add watchlist

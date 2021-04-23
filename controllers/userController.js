@@ -33,6 +33,9 @@ class UserController {
       async userUpdate(req, res) {
             try {
               // Update data
+              if (req.user.id != req.params.id) {
+                return res.status(404).json({ message: "Id User is not found" });
+              }
               let dataUser = await user.findOneAndUpdate(
                 {  _id: req.params.id },
                 req.body, { new: true }

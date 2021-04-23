@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const path = require("path");
 const mongoose = require("mongoose");
 const validator = require("validator");
-const { user, review, movie, person } = require("../../models");
+const { user, review, movie } = require("../../models");
 
 exports.create = async (req, res, next) => {
   try {
