@@ -90,6 +90,9 @@ function getGenre(genre) {
   });
 }
 function getImagePoster(image) {
+  if (!image || image == "") {
+    return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster/defaultPoster.jpg` : `/images/poster/defaultPoster.jpg`
+  }
   if (image[0] !== "/") {
     image = "/" + image;
   }
@@ -97,6 +100,9 @@ function getImagePoster(image) {
 }
 
 function getImageBackdrop(image) {
+  if (!image || image == "") {
+    return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/backdrop/defaultBackdrop.jpg` : `/images/poster/defaultBackdrop.jpg`
+  }
   if (image[0] !== "/") {
     image = "/" + image;
   }
@@ -105,6 +111,9 @@ function getImageBackdrop(image) {
 
 function getImageCharacters(data) {
   let ret = data.map( item => {
+    if (!item || item == "") {
+      return process.env.PUBLIC_URL ? process.env.PUBLIC_URL+ `/images/poster/defaultCast.jpg` : `/images/poster/defaultCast.jpg`
+    }
     if (item.photo[0] !== "/") {
       item.photo = "/" + item.photo;
     }
