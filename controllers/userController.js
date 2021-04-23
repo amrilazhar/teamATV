@@ -56,12 +56,12 @@ class UserController {
                 limit: req.query.limit ? req.query.limit : 10,
               };
 
-              let dataReview = await review.paginate({ deleted: false, user_id : req.user.id }, options);
+              let dataReview = await review.paginate({ user_id : req.user.id }, options);
 
               if (dataReview.totalDocs > 0) {
-                res.status(200).json({ message: "success", data: dataReview });
+                return res.status(200).json({ message: "success", data: dataReview });
               } else {
-                res.status(400).json({ message: "No Movie Reviewed", data: dataReview });
+                return res.status(400).json({ message: "No Movie Reviewed", data: dataReview });
               }
             } catch (e) {
               console.log(e);
