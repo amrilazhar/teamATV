@@ -344,7 +344,7 @@ class MovieController {
     try {
       await movie.deleteOne({ _id: req.params.id });
 
-      await review.delete({ movie_id: req.params.id });
+      await review.deleteMany({ movie_id: req.params.id });
 
       return res.status(200).json({
         message: "Success",
