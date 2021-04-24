@@ -71,7 +71,6 @@ ReviewSchema.post("save", function () {
 ReviewSchema.post("findOneAndUpdate", function () {
   //get movie id from this (query document)
   let movieId = this._update["$set"].movie_id;
-  console.log(this);
   //call the getAverageRating function within query document.
   this.model.getAverageRating(movieId);
 });
