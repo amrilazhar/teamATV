@@ -91,7 +91,7 @@ passport.use(
     },
     async (token, done) => {
       const userSignin = await user.findOne({
-        email: token.user.email,
+        _id: token.user.id,
       },"role");
 
       if (userSignin.role.includes("admin")) {
@@ -113,7 +113,7 @@ passport.use(
     async (token, done) => {
       try {
         const userSignin = await user.findOne({
-          email: token.user.email,
+          _id: token.user.id,
         });
 
         if (!userSignin.role) {
