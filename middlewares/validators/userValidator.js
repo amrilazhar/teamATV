@@ -7,8 +7,6 @@ class UserValidator {
     try {
       let act = req.route.path.substring(1).replace('/:id', '');
       let errors = [];
-      console.log("masuk validate");
-      console.log(act, " =====Act");
       if (act === "signup" || act === "userUpdate") {
         if (!validator.isAlpha(validator.blacklist(req.body.name, " "))) {
           errors.push("Name must be alphabet");

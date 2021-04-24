@@ -54,9 +54,19 @@ class UserController {
       // view review of user
       async userGetReview(req, res) {
             try {
+              //cek paginate status
+              let paginateStatus = true;
+              if (req.query.pagination) {
+                if (req.query.pagination == "false") {
+                  paginateStatus = false;
+                }
+              }
               const options = {
                 page: req.query.page ? req.query.page : 1,
                 limit: req.query.limit ? req.query.limit : 10,
+                sort: { updated_at : -1 },
+                populate: { path: "movie_id", select: "title poster backdrop" },
+                pagination: paginateStatus,
               };
 
               let dataReview = await review.paginate({ user_id : req.user.id }, options);

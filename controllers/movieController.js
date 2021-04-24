@@ -60,7 +60,7 @@ class MovieController {
       }
       const options = {
         select: "title rating review updated_at",
-        sort: { release_date: -1 },
+        sort: { updated_at : -1 },
         populate: { path: "user_id", select: "name profile_picture" },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
