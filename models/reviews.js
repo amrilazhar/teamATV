@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const ReviewSchema = new mongoose.Schema(
   {
-    user_id : {
+    user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
-    movie_id : {
+    movie_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref : 'movies',
+      ref: "movies",
     },
     rating: {
       type: Number,
@@ -39,36 +39,41 @@ ReviewSchema.index({ movie_id: 1, user_id: 1 }, { unique: true });
 
 // Static method to get averaga rating
 ReviewSchema.statics.getAverageRating = async function (movieId) {
-
-  const obj = await this.aggregate([
-    {
-      $match: { movie_id: movieId },
-    },
-    {
-      $group: {
-        _id: "$movie_id",
-        averageRating: { $avg: "$rating" },
-      },
-    },
-  ]);
-
   try {
+    let obj = await this.aggregate([
+      {
+        $match: { movie_id: movieId },
+      },
+      {
+        $group: {
+          _id: "$movie_id",
+          averageRating: { $avg: "$rating" },
+        },
+      },
+    ]);
+    let count_review = await this.find({ movie_id: movieId }).exec();
     await this.model("movies").findByIdAndUpdate(movieId, {
       avg_rating: obj[0].averageRating,
+      count_review: count_review.length,
     });
   } catch (e) {
-    console.error(e);
+    console.log(e);
   }
 };
 
 // call getAverageCost after save
 ReviewSchema.post("save", function () {
+  //call function get average rating from model document
   this.constructor.getAverageRating(this.movie_id);
 });
 
 // call getAverageCost after update
-ReviewSchema.post("update", function () {
-  this.constructor.getAverageRating(this.movie_id);
+ReviewSchema.post("findOneAndUpdate", function () {
+  //get movie id from this (query document)
+  let movieId = this._update["$set"].movie_id;
+  console.log(this);
+  //call the getAverageRating function within query document.
+  this.model.getAverageRating(movieId);
 });
 
 // call getAverageCost after remove

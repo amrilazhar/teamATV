@@ -77,7 +77,7 @@ class ReviewController {
         });
       }
       // Update data
-      let data = await review.findOneAndUpdate(
+      let update = await review.findOneAndUpdate(
         {
           _id: req.params.id,
         },
@@ -92,7 +92,7 @@ class ReviewController {
       // If success
       return res.status(201).json({
         message: "Success",
-        data,
+        update,
       });
     } catch (e) {
       if (
