@@ -198,7 +198,6 @@ let isAdmin = async (req, res, next) => {
 
 let isUser = async (req, res, next) => {
   try {
-    console.log("masuk is user");
     passport.authorize("user", { session: false }, (err, user, info) => {
       if (err) {
         console.log(err);
@@ -216,7 +215,6 @@ let isUser = async (req, res, next) => {
         });
       }
       req.user = user;
-      console.log("keluar is user");
       next();
 
     })(req, res, next);
