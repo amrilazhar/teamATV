@@ -7,8 +7,10 @@ const { user, review, movie } = require("../models"); // import transaksi models
 let authenticationToken = "0";
 let tempMovieId = "";
 let tempReviewId = ""
+let tokenAnotherUser ="";
 
 describe("Review Feature TEST", () => {
+
   describe("/POST Create Review", () => {
     test("It should insert new review to a movie", async () => {
       // delete all user, do there were no duplicate admin
@@ -129,7 +131,7 @@ describe("Review Feature TEST", () => {
         .send({
           review: "Test ini review dua kali"
         });
-        
+
         expect(res.statusCode).toEqual(400);
         expect(res.body).toBeInstanceOf(Object);
         expect(res.body.message).toEqual("movie_id is not valid and must be 24 character & hexadecimal");
@@ -191,6 +193,20 @@ describe("Review Feature TEST", () => {
     });
   });
 
+  describe("/GET/:id review", () => {
+    it("it should return review not found", async () => {
+      const res = await request(app)
+        .get(`/review/getOne/608579620234671fc97a3508`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        });
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("review not found");
+    });
+  });
+
   describe("/GET/:id review Invalid ID", () => {
     it("it should return error", async () => {
       const res = await request(app)
@@ -226,7 +242,7 @@ describe("Review Feature TEST", () => {
     });
   });
 
-  describe("/PUT Edit Review", () => {
+  describe("/PUT Edit Review (Review not Found)", () => {
     test("It should return error", async () => {
 
       const res = await request(app)
@@ -246,7 +262,7 @@ describe("Review Feature TEST", () => {
     });
   });
 
-  describe("/PUT Edit Review", () => {
+  describe("/PUT Edit Review (Movie Not Found)", () => {
     test("It should return error", async () => {
 
       const res = await request(app)
@@ -363,8 +379,6 @@ describe("Review Feature TEST", () => {
     });
   });
 
-
-
   describe("/DELETE Delete Review with different user", () => {
     test("It should delete current review", async () => {
 
@@ -392,6 +406,8 @@ describe("Review Feature TEST", () => {
         { algorithm: "RS256" }
       );
 
+      tokenAnotherUser = token;
+
       const res = await request(app)
         .delete(`/review/delete/${tempReviewId}`)
         .set({
@@ -401,6 +417,41 @@ describe("Review Feature TEST", () => {
       expect(res.statusCode).toEqual(403);
       expect(res.body).toBeInstanceOf(Object);
       expect(res.body.message).toEqual("you are not the owner of this review");
+    });
+  });
+
+  describe("/PUT Edit Review", () => {
+    test("It should update current review", async () => {
+
+      const res = await request(app)
+        .put(`/review/update/${tempReviewId}`)
+        .set({
+          Authorization: `Bearer ${tokenAnotherUser}`,
+        })
+        .send({
+          movie_id: tempMovieId,
+          rating: "3",
+          review: "Test Update Review"
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("Success");
+      expect(res.body.data.review).toEqual("Test Update Review");
+    });
+  });
+
+  describe("/GET/:id review", () => {
+    it("it should GET one the review", async () => {
+      const res = await request(app)
+        .get(`/review/getOne/${tempReviewId}`)
+        .set({
+          Authorization: `Bearer ${tokenAnotherUser}`,
+        });
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toHaveProperty("you are not the owner of this review");
     });
   });
 

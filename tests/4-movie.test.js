@@ -88,6 +88,26 @@ describe("Movie Feature TEST", () => {
     });
   });
 
+  describe("/POST Create Movie with array genre Error (not Alphabet)", () => {
+    test("It should insert new movie", async () => {
+      const res = await request(app)
+        .post("/movie/")
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy")
+        .field("genre", "124");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("Genre should be alphabet");
+    });
+  });
+
   describe("/POST Create Movie Failed (director with symbol)", () => {
     test("It should return failed", async () => {
       const res = await request(app)
@@ -353,11 +373,173 @@ describe("Movie Feature TEST", () => {
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/teamATV.png")
         .attach("character_images", "./tests/teamATV.png");
-      
+
       expect(res.statusCode).toEqual(201);
       expect(res.body).toBeInstanceOf(Object);
       expect(res.body.message).toEqual("success");
       expect(res.body.data.title).toEqual("my awesome avatar");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with image poster, backdrop, character", () => {
+    test("It should create a movie with images", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body).toHaveProperty("data");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Non Image poster", () => {
+    test("It should return error file must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/4-movie.test.js")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file must be an image");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Non Image Backdrop", () => {
+    test("It should return error file must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/4-movie.test.js")
+        .attach("character_images", "./tests/teamATV.png");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file must be an image");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Non Image Character", () => {
+    test("It should return error file must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/4-movie.test.js");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file must be an image");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Large Image Character", () => {
+    test("It should return error file must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/pelanggan.gif");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file size larger than 3MB");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Large Image Backdrop", () => {
+    test("It should return error fil must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/pelanggan.gif")
+        .attach("character_images", "./tests/teamATV.png");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file size larger than 5MB");
+    });
+  });
+
+  describe("/PUT UPDATE Movie with Large Image Poster", () => {
+    test("It should return error fil must be an image", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy,adventure,romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/pelanggan.gif")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("file size larger than 5MB");
     });
   });
 
@@ -566,5 +748,6 @@ describe("Movie Feature TEST", () => {
       expect(res.body.message).toEqual("file size larger than 5MB");
     });
   });
+
 
 });

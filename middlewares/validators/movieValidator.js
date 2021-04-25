@@ -32,7 +32,6 @@ exports.create = async (req, res, next) => {
       });
     }
 
-
     if (errors.length > 0) {
       return res.status(400).json({
         message: errors.join(", "),
@@ -43,7 +42,7 @@ exports.create = async (req, res, next) => {
       if (req.files.character_images) {
         // cek apakah array
         if (!req.files.character_images.length) {
-          req.files.character_images = [ req.files.character_images ];
+          req.files.character_images = [req.files.character_images];
         }
         const file = req.files.character_images;
         req.character = { images: [] };
@@ -164,7 +163,8 @@ exports.update = async (req, res, next) => {
 
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({
-        message: "id_movie is not valid and must be 24 characters & hexadecimal",
+        message:
+          "id_movie is not valid and must be 24 characters & hexadecimal",
       });
     }
 
@@ -208,12 +208,11 @@ exports.update = async (req, res, next) => {
 
     if (req.files) {
       if (req.files.character_images) {
-        const file = req.files.character_images;
         // cek apakah array
         if (!req.files.character_images.length) {
-          req.files.character_images = [ req.files.character_images ];
+          req.files.character_images = [req.files.character_images];
         }
-
+        const file = req.files.character_images;
         req.character = { images: [] };
         for (let i = 0; i < file.length; i++) {
           if (!file[i].mimetype.startsWith("image")) {
@@ -234,12 +233,9 @@ exports.update = async (req, res, next) => {
 
           req.character.images.push(file[i].name);
 
-          file[i].mv(`./public/images/cast` + `${file[i].name}`, function (
-            err
-          ) {
+          file[i].mv(`./public/images/cast/` + `${file[i].name}`, (err) => {
             if (err) {
               console.log(err);
-
               return res.status(500).json({
                 message: "Internal Server Error",
                 error: err.message,

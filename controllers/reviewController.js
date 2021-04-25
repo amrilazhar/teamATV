@@ -5,7 +5,9 @@ class ReviewController {
   async getOne(req, res) {
     try {
       req.body.user_id = req.user.id;
-      const singleReview = await review.findById(req.params.id).populate('movie_id', 'title poster');
+      const singleReview = await review
+        .findById(req.params.id)
+        .populate("movie_id", "title poster");
 
       // if barang not found
       if (!singleReview) {
@@ -95,23 +97,11 @@ class ReviewController {
         data,
       });
     } catch (e) {
-      if (
-        e.code == 11000 &&
-        e.keyPattern.movie_id == 1 &&
-        e.keyPattern.user_id == 1
-      ) {
-        console.log(e);
-        return res.status(400).json({
-          message: "Error",
-          error: "User has been reviewed this movie",
-        });
-      } else {
-        console.log(e);
-        return res.status(500).json({
-          message: "Internal Server Error",
-          error: e.message,
-        });
-      }
+      console.log(e);
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: e.message,
+      });
     }
   }
 
