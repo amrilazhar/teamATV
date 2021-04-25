@@ -55,7 +55,7 @@ exports.create = async (req, res, next) => {
           file[i].name = `${fileName}${path.parse(file[i].name).ext}`;
           req.character.images.push(file[i].name);
 
-          file[i].mv(`./public/images/cast` + `${file[i].name}`, function (
+          file[i].mv(`./public/images/cast/` + `${file[i].name}`, function (
             err
           ) {
             if (err) {
