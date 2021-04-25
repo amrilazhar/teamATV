@@ -77,7 +77,7 @@ class ReviewController {
         });
       }
       // Update data
-      let update = await review.findOneAndUpdate(
+      let data = await review.findOneAndUpdate(
         {
           _id: req.params.id,
         },
@@ -92,7 +92,7 @@ class ReviewController {
       // If success
       return res.status(201).json({
         message: "Success",
-        update,
+        data,
       });
     } catch (e) {
       if (
@@ -120,7 +120,7 @@ class ReviewController {
       const singleReview = await review.findById(req.params.id);
 
       if (singleReview.user_id.toString() !== req.user.id && req.user.id) {
-        return res.status(404).json({
+        return res.status(403).json({
           message: `you are not the owner of this review`,
         });
       }

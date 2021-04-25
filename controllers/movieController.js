@@ -60,7 +60,7 @@ class MovieController {
       }
       const options = {
         select: "title rating review updated_at",
-        sort: { updated_at : -1 },
+        sort: { updated_at: -1 },
         populate: { path: "user_id", select: "name profile_picture" },
         page: req.query.page ? req.query.page : 1,
         limit: req.query.limit ? req.query.limit : 10,
@@ -203,31 +203,32 @@ class MovieController {
   async create(req, res) {
     try {
       let genre;
-      if (typeof req.body.genre == 'string') {
+      if (typeof req.body.genre == "string") {
         genre = req.body.genre.split(",").map((item) => {
-          if (item !== null && item !== '') {
+          if (item !== null && item !== "") {
             return item[0].toUpperCase() + item.slice(1).toLowerCase();
           }
         });
       } else {
         genre = req.body.genre.map((item) => {
-          if (item !== null && item !== '') {
+          if (item !== null && item !== "") {
             return item[0].toUpperCase() + item.slice(1).toLowerCase();
           }
         });
       }
 
       let characters = [];
-      if (typeof req.body.character_name == 'string') {
-        req.body.character_name = [ req.body.character_name ];
+      if (typeof req.body.character_name == "string") {
+        req.body.character_name = [req.body.character_name];
       }
-
-      for (let i = 0; i < req.character.images.length; i++) {
-        characters.push({
-          role_name: req.body.character_name[i],
-          photo: req.character.images[i],
-        });
-      };
+      if (req.character) {
+        for (let i = 0; i < req.character.images.length; i++) {
+          characters.push({
+            role_name: req.body.character_name[i],
+            photo: req.character.images[i],
+          });
+        }
+      }
 
       let insertData = {
         title: req.body.title,
@@ -236,17 +237,13 @@ class MovieController {
         release_date: new Date(req.body.release_date),
         synopsis: req.body.synopsis,
         genre: genre,
+        poster: req.body.poster ? req.body.poster : "defaultPoster.jpg",
+        backdrop: req.body.backdrop ? req.body.backdrop : "defaultBackdrop.jpg",
         trailer: req.body.trailer,
         isReleased: req.body.released == "released" ? true : false,
         updatedBy: req.user.id,
       };
 
-      if (req.body.poster) {
-        insertData.poster = req.body.poster;
-      }
-      if (req.body.backdrop) {
-        insertData.backdrop = req.body.backdrop;
-      }
       if (characters.length > 0) {
         insertData.characters = characters;
       }
@@ -254,7 +251,7 @@ class MovieController {
       let data = await movie.create(insertData);
 
       return res.status(201).json({
-        message: "Success",
+        message: "success",
         data,
       });
     } catch (e) {
@@ -269,32 +266,32 @@ class MovieController {
   async update(req, res) {
     try {
       let genre;
-      if (typeof req.body.genre == 'string') {
+      if (typeof req.body.genre == "string") {
         genre = req.body.genre.split(",").map((item) => {
-          if (item !== null && item !== '') {
+          if (item !== null && item !== "") {
             return item[0].toUpperCase() + item.slice(1).toLowerCase();
           }
         });
       } else {
         genre = req.body.genre.map((item) => {
-          if (item !== null && item !== '') {
+          if (item !== null && item !== "") {
             return item[0].toUpperCase() + item.slice(1).toLowerCase();
           }
         });
       }
 
       let characters = [];
-      if (typeof req.body.character_name == 'string') {
-        req.body.character_name = [ req.body.character_name ];
+      if (typeof req.body.character_name == "string") {
+        req.body.character_name = [req.body.character_name];
       }
-
-      for (let i = 0; i < req.character.images.length; i++) {
-        characters.push({
-          role_name: req.body.character_name[i],
-          photo: req.character.images[i],
-        });
-      };
-
+      if (req.character) {
+        for (let i = 0; i < req.character.images.length; i++) {
+          characters.push({
+            role_name: req.body.character_name[i],
+            photo: req.character.images[i],
+          });
+        }
+      }
       let insertData = {
         title: req.body.title,
         director: req.body.director,
@@ -302,17 +299,13 @@ class MovieController {
         release_date: new Date(req.body.release_date),
         synopsis: req.body.synopsis,
         genre: genre,
+        poster: req.body.poster ? req.body.poster : "defaultPoster.jpg",
+        backdrop: req.body.backdrop ? req.body.backdrop : "defaultBackdrop.jpg",
         trailer: req.body.trailer,
         isReleased: req.body.released == "released" ? true : false,
         updatedBy: req.user.id,
       };
 
-      if (req.body.poster) {
-        insertData.poster = req.body.poster;
-      }
-      if (req.body.backdrop) {
-        insertData.backdrop = req.body.backdrop;
-      }
       if (characters.length > 0) {
         insertData.characters = characters;
       }
@@ -328,8 +321,8 @@ class MovieController {
       );
 
       return res.status(201).json({
-        message: "Success",
-        data:data,
+        message: "success",
+        data: data,
       });
     } catch (e) {
       console.log(e);
@@ -347,7 +340,7 @@ class MovieController {
       await review.deleteMany({ movie_id: req.params.id });
 
       return res.status(200).json({
-        message: "Success",
+        message: "success",
       });
     } catch (e) {
       console.log(e);

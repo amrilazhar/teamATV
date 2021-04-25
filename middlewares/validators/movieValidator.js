@@ -159,10 +159,12 @@ exports.update = async (req, res, next) => {
       });
     }
 
-    let data = await movie.findOne({ _id: req.params.id });
+    let data = await movie.findOne({ _id: req.params.id }).exec();
 
     if (!data) {
-      errors.push("Movie not found");
+      return res.status(400).json({
+        message: "Movie not found",
+      });
     }
 
     if (!validator.isAlpha(validator.blacklist(req.body.director, " "))) {
