@@ -14,10 +14,10 @@ function upload(req, res, next) {
     sampleFile = req.files.profile_picture;
 
     // Check file size (max 1MB)
-    if (sampleFile.size > 10000000) {
+    if (sampleFile.size > 5000000) {
       return res
         .status(400)
-        .json({ message: "Image must be less than 10MB" });
+        .json({ message: "Image must be less than 5MB" });
     }
 
     if (
@@ -36,7 +36,7 @@ function upload(req, res, next) {
       req.body.profile_picture = fileName;
       next();
     } else {
-      return res.status(400).send("file is not an image");
+      return res.status(400).send({message : "file is not an image" });
     }
   }
 }

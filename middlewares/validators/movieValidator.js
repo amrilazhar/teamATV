@@ -20,9 +20,18 @@ exports.create = async (req, res, next) => {
       errors.push("Date is consist of yyyy/mm/dd");
     }
 
-    if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
-      errors.push("Genre should be alphabet");
+    if (typeof req.body.genre == "string") {
+      if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
+        errors.push("Genre should be alphabet");
+      }
+    } else {
+      req.body.genre.forEach((item) => {
+        if (!validator.isAlpha(validator.blacklist(item, ", "))) {
+          errors.push("Genre should be alphabet");
+        }
+      });
     }
+
 
     if (errors.length > 0) {
       return res.status(400).json({
@@ -179,8 +188,16 @@ exports.update = async (req, res, next) => {
       errors.push("Date is consist of yyyy/mm/dd");
     }
 
-    if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
-      errors.push("Genre should be alphabet");
+    if (typeof req.body.genre == "string") {
+      if (!validator.isAlpha(validator.blacklist(req.body.genre, ", "))) {
+        errors.push("Genre should be alphabet");
+      }
+    } else {
+      req.body.genre.forEach((item) => {
+        if (!validator.isAlpha(validator.blacklist(item, ", "))) {
+          errors.push("Genre should be alphabet");
+        }
+      });
     }
 
     if (errors.length > 0) {

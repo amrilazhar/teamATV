@@ -10,8 +10,8 @@ let tempIDReview;
 let tempIDUser;
 
 describe("Movie List TEST", () => {
-  describe("/GET All Movie", () => {
-    test("It should return list of all movies, with pagination", async () => {
+  describe("/GET Featured Movie (Not Found)", () => {
+    test("It should return 10 movies of featured movies", async () => {
       //clean up the data first
       //clean user data
       await user.collection.dropIndexes();
@@ -27,14 +27,39 @@ describe("Movie List TEST", () => {
         { user_id: 1, movie_id: 1 },
         { unique: true }
       );
+
+      const res = await request(app).get("/movie/getFeatured");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("Not Found");
+    });
+  });
+
+  describe("/GET All Movie (Not Found)", () => {
+    test("It should return list of all movies, with pagination", async () => {
+      const res = await request(app).get("/movie/getAll");
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("Not Found");
+    });
+  });
+
+  describe("/GET All Movie", () => {
+    test("It should return list of all movies, with pagination", async () => {
+
       //create dummy movie data for searching
       let dummyMovie = await movie.create({
         genre: ["Action", "Adventure"],
         title: "Avenger",
         isFeatured: true,
+        isReleased : true,
         release_date: new Date("2010-10-10"),
+        rated : "R"
       });
       tempIDMovie = dummyMovie._id;
+
       const res = await request(app).get("/movie/getAll?page=5&limit=10");
 
       expect(res.statusCode).toEqual(200);
@@ -152,7 +177,20 @@ describe("Movie List TEST", () => {
   describe("/GET Search Movie", () => {
     test("It should return list of movies that match the search options, with pagination", async () => {
       const res = await request(app).get(
-        "/movie/search?page=1&limit=10&genre=Action,adventure&title=Ave&release_date=2009,2021"
+        "/movie/search?page=1&limit=10&genre=Action,adventure&title=Ave&release_date=2010&status=released&rated=R"
+      );
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body).toHaveProperty("data");
+    });
+  });
+
+  describe("/GET Search Movie with Release date range", () => {
+    test("It should return list of movies that match the search options, with pagination", async () => {
+      const res = await request(app).get(
+        "/movie/search?page=1&limit=10&genre=Action,adventure&title=Ave&release_date=2009,2021&status=released&rated=R"
       );
 
       expect(res.statusCode).toEqual(200);
@@ -176,7 +214,7 @@ describe("Movie List TEST", () => {
 });
 
 describe("Movie Details TEST", () => {
-  describe("/GET Review Movie", () => {
+  describe("/GET Review Movie (NY Reviewed)", () => {
     test("It should return list of review that connected to the movie", async () => {
       //create dummy user for review
       let dummyUser = await user.create({
@@ -204,6 +242,18 @@ describe("Movie Details TEST", () => {
       // save token for later use
       authenticationToken = token;
 
+      const res = await request(app).get(
+        `/movie/getReview/${tempIDMovie}?page=1&limit=10`
+      );
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("Not Yet Reviewed");
+    });
+  });
+
+  describe("/GET Review Movie", () => {
+    test("It should return list of review that connected to the movie", async () => {
       //create dummy review for search
       let dummyReview = await review.create({
         user_id: tempIDUser,
@@ -328,4 +378,18 @@ describe("Movie Details TEST", () => {
     });
   });
 
+  describe("/GET Movie Detail Info as a User", () => {
+    test("It should return detail info of the movie", async () => {
+      const res = await request(app)
+        .get(`/movie/detail/${tempIDMovie}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body).toHaveProperty("data");
+    });
+  });
 });

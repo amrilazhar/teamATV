@@ -449,3 +449,75 @@ describe("/PUT userUpdate SUCCESS", () => {
     expect(res.body.data.email).toEqual("jhorgisukanasigoreng@glints.com");
   });
 });
+
+describe("/PUT userUpdate error profile picture too large", () => {
+  test("It should return error fil must be an image", async () => {
+    const res = await request(app)
+      .put(`/user/userUpdate/${tempID}`)
+      .set({
+        Authorization: `Bearer ${authenticationToken}`,
+      })
+      .field("name", "George")
+      .field("email", "jhorgisukanasigoreng@glints.com")
+      .field("password", "Onegai12yu!!")
+      .field("confirmPassword", "Onegai12yu!!")
+      .attach("profile_picture", "./tests/pelanggan.gif")
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toBeInstanceOf(Object);
+    expect(res.body.message).toEqual("Image must be less than 5MB");
+  });
+});
+
+describe("/PUT userUpdate error profile picture too large", () => {
+  test("It should return error fil must be an image", async () => {
+    const res = await request(app)
+      .put(`/user/userUpdate/${tempID}`)
+      .set({
+        Authorization: `Bearer ${authenticationToken}`,
+      })
+      .field("name", "George")
+      .field("email", "jhorgisukanasigoreng@glints.com")
+      .field("password", "Onegai12yu!!")
+      .field("confirmPassword", "Onegai12yu!!")
+      .attach("profile_picture", "./tests/1-user.test.js")
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toBeInstanceOf(Object);
+    expect(res.body.message).toEqual("file is not an image");
+  });
+});
+
+describe("/PUT userUpdate error attribute images has different key", () => {
+  test("It should return error", async () => {
+    const res = await request(app)
+      .put(`/user/userUpdate/${tempID}`)
+      .set({
+        Authorization: `Bearer ${authenticationToken}`,
+      })
+      .field("name", "George")
+      .field("email", "jhorgisukanasigoreng@glints.com")
+      .field("password", "Onegai12yu!!")
+      .field("confirmPassword", "Onegai12yu!!")
+      .attach("character_images", "./tests/1-user.test.js")
+      
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toBeInstanceOf(Object);
+
+  });
+});
+
+describe("/PUT userUpdate error attribute send not complete", () => {
+  test("It should return error", async () => {
+    const res = await request(app)
+      .put(`/user/userUpdate/${tempID}`)
+      .set({
+        Authorization: `Bearer ${authenticationToken}`,
+      })
+      .field("name", "George")
+
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toBeInstanceOf(Object);
+    expect(res.body.message).toEqual("internal server error");
+  });
+});

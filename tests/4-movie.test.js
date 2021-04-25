@@ -58,13 +58,33 @@ describe("Movie Feature TEST", () => {
           genre: "fantasy, adventure, roamnce",
         });
 
-
       expect(res.statusCode).toEqual(201);
       expect(res.body).toBeInstanceOf(Object);
       expect(res.body.message).toEqual("success");
       expect(res.body.data.title).toEqual("Anne with an E");
       //save id movie
       temporaryMovieId = res.body.data._id;
+    });
+  });
+
+  describe("/POST Create Movie with array genre", () => {
+    test("It should insert new movie", async () => {
+      const res = await request(app)
+        .post("/movie/")
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy")
+        .field("genre", "romance");
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body.data.title).toEqual("my awesome avatar");
     });
   });
 
@@ -174,13 +194,35 @@ describe("Movie Feature TEST", () => {
     });
   });
 
+  describe("/PUT Update Movie Success with array genre", () => {
+    test("It should update a movie", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy")
+        .field("genre", "romance");
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body.data.title).toEqual("my awesome avatar");
+    });
+  });
+
   describe("/PUT Movie Failed (invalid id)", () => {
     test("It should return failed because invalid id", async () => {
       const res = await request(app)
         .put(`/movie/` + 12412)
         .set({
           Authorization: `Bearer ${authenticationToken}`,
-        }).send({
+        })
+        .send({
           title: "Anne with an A",
           director: "phillip pullman",
           budget: "20000000",
@@ -190,7 +232,9 @@ describe("Movie Feature TEST", () => {
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toEqual("id_movie is not valid and must be 24 characters & hexadecimal");
+      expect(res.body.message).toEqual(
+        "id_movie is not valid and must be 24 characters & hexadecimal"
+      );
     });
   });
 
@@ -292,6 +336,31 @@ describe("Movie Feature TEST", () => {
     });
   });
 
+  describe("/PUT Update Movie Success with images", () => {
+    test("It should update a movie", async () => {
+      const res = await request(app)
+        .put(`/movie/${temporaryMovieId}`)
+        .set({
+          Authorization: `Bearer ${authenticationToken}`,
+        })
+        .field("title", "my awesome avatar")
+        .field("budget", "100")
+        .field("release_date", "2021/03/11")
+        .field("director", "my awesome director")
+        .field("genre", "fantasy")
+        .field("genre", "romance")
+        .field("character_name", "John Doe")
+        .attach("poster", "./tests/teamATV.png")
+        .attach("backdrop", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
+      
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.message).toEqual("success");
+      expect(res.body.data.title).toEqual("my awesome avatar");
+    });
+  });
+
   describe("/DELETE Movie Failed (invalid id)", () => {
     test("It should return failed because invalid id", async () => {
       const res = await request(app)
@@ -302,7 +371,9 @@ describe("Movie Feature TEST", () => {
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toEqual("id_movie is not valid and must be 24 character & hexadecimal");
+      expect(res.body.message).toEqual(
+        "id_movie is not valid and must be 24 character & hexadecimal"
+      );
     });
   });
 
@@ -349,7 +420,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/teamATV.png")
-        .attach("character_images", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
 
       expect(res.statusCode).toEqual(201);
       expect(res.body).toBeInstanceOf(Object);
@@ -373,7 +444,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/4-movie.test.js")
         .attach("backdrop", "./tests/teamATV.png")
-        .attach("character_images", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
@@ -396,7 +467,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/4-movie.test.js")
-        .attach("character_images", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
@@ -419,7 +490,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/teamATV.png")
-        .attach("character_images", "./tests/4-movie.test.js")
+        .attach("character_images", "./tests/4-movie.test.js");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
@@ -442,7 +513,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/teamATV.png")
-        .attach("character_images", "./tests/pelanggan.gif")
+        .attach("character_images", "./tests/pelanggan.gif");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
@@ -465,7 +536,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/teamATV.png")
         .attach("backdrop", "./tests/pelanggan.gif")
-        .attach("character_images", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
@@ -488,7 +559,7 @@ describe("Movie Feature TEST", () => {
         .field("character_name", "John Doe")
         .attach("poster", "./tests/pelanggan.gif")
         .attach("backdrop", "./tests/teamATV.png")
-        .attach("character_images", "./tests/teamATV.png")
+        .attach("character_images", "./tests/teamATV.png");
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
