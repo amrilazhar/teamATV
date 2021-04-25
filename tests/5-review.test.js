@@ -434,10 +434,9 @@ describe("Review Feature TEST", () => {
           review: "Test Update Review"
         });
 
-      expect(res.statusCode).toEqual(201);
+      expect(res.statusCode).toEqual(404);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toEqual("Success");
-      expect(res.body.data.review).toEqual("Test Update Review");
+      expect(res.body.message).toEqual("you are not the owner of this review");
     });
   });
 
@@ -451,7 +450,7 @@ describe("Review Feature TEST", () => {
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.message).toHaveProperty("you are not the owner of this review");
+      expect(res.body.message).toEqual("you are not the owner of this review");
     });
   });
 
