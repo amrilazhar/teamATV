@@ -61,6 +61,11 @@ app.use("/user", userRoutes);
 const genreRoutes = require("./routes/genreRoute.js");
 app.use("/genre", genreRoutes);
 
+//hosting front end code
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname ,'public', 'index.html'));
+});
+
 //======================== security code ==============================//
 // Sanitize data
 app.use(mongoSanitize());
