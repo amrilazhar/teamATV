@@ -52,9 +52,10 @@ ReviewSchema.statics.getAverageRating = async function (movieId) {
       },
     ]);
     let count_review = await this.find({ movie_id: movieId }).exec();
+
     await this.model("movies").findByIdAndUpdate(movieId, {
       avg_rating: obj[0].averageRating,
-      count_review: count_review.length,
+      count_review: eval(count_review.length),
     });
   } catch (e) {
     console.log(e);
