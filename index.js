@@ -111,7 +111,7 @@ if (process.env.NODE_ENV === "dev") {
 //======================== end security code ==============================//
 
 if (process.env.NODE_ENV !== "test") {
-  let PORT = 3000;
+  let PORT = 3001;
   app.listen(PORT, () =>
     console.log("server running on PORT :", PORT)
   );
